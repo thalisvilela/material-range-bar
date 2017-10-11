@@ -1,2 +1,1 @@
-include 'rangebar', ':rangebar'
-include 'RangeBarSample'
+include ':materialrangebar',':RangeBarSample'
