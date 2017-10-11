@@ -4,6 +4,7 @@ package com.appyvet.rangebarsample;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.appyvet.materialrangebar.RangeBar;
 import com.appyvet.rangebarsample.colorpicker.ColorPickerDialog;
 import com.appyvet.rangebarsample.colorpicker.Utils;
+
 
 public class MainActivity extends Activity implements
         ColorPickerDialog.OnColorSelectedListener {
@@ -104,8 +106,7 @@ public class MainActivity extends Activity implements
         rangebar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
             public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex,
-                                              int rightPinIndex,
-                                              String leftPinValue, String rightPinValue) {
+                                              int rightPinIndex, String leftPinValue, String rightPinValue) {
                 leftIndexValue.setText("" + leftPinIndex);
                 rightIndexValue.setText("" + rightPinIndex);
             }
@@ -262,7 +263,7 @@ public class MainActivity extends Activity implements
             }
         });
 
-        // Sets thumbRadius
+        // Sets selector boundary thumb radius
         final TextView thumbRadius = (TextView) findViewById(R.id.thumbRadius);
         SeekBar thumbRadiusSeek = (SeekBar) findViewById(R.id.thumbRadiusSeek);
         thumbRadiusSeek.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -281,13 +282,16 @@ public class MainActivity extends Activity implements
             }
         });
 
-        // Sets thumbRadius
+        // Sets selector boundary thumb Radius
         final TextView thumbBoundarySize = (TextView) findViewById(R.id.thumbBoundarySize);
         SeekBar thumbBoundarySeek = (SeekBar) findViewById(R.id.thumbBoundarySeek);
         thumbBoundarySeek.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar thumbRadiusSeek, int progress, boolean fromUser) {
-                rangebar.setSelectorBoundarySize(progress);
+                int valueInDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                        progress,
+                        getResources().getDisplayMetrics());
+                rangebar.setSelectorBoundarySize(valueInDp);
                 thumbBoundarySize.setText("Selector Boundary Size = " + progress);
             }
 
@@ -305,14 +309,14 @@ public class MainActivity extends Activity implements
         // Sets barColor
         barColor.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                initColorPicker(com.appyvet.rangebarsample.Component.BAR_COLOR, mBarColor, mBarColor);
+                initColorPicker(Component.BAR_COLOR, mBarColor, mBarColor);
             }
         });
 
         // Sets connectingLineColor
         connectingLineColor.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                initColorPicker(com.appyvet.rangebarsample.Component.CONNECTING_LINE_COLOR, mConnectingLineColor,
+                initColorPicker(Component.CONNECTING_LINE_COLOR, mConnectingLineColor,
                         mConnectingLineColor);
             }
         });
@@ -320,32 +324,32 @@ public class MainActivity extends Activity implements
         // Sets pinColor
         pinColor.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                initColorPicker(com.appyvet.rangebarsample.Component.PIN_COLOR, mPinColor, mPinColor);
+                initColorPicker(Component.PIN_COLOR, mPinColor, mPinColor);
             }
         });
         // Sets pinTextColor
         pinTextColor.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                initColorPicker(com.appyvet.rangebarsample.Component.TEXT_COLOR, mTextColor, mTextColor);
+                initColorPicker(Component.TEXT_COLOR, mTextColor, mTextColor);
             }
         });
         // Sets tickColor
         tickColor.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                initColorPicker(com.appyvet.rangebarsample.Component.TICK_COLOR, mTickColor, mTickColor);
+                initColorPicker(Component.TICK_COLOR, mTickColor, mTickColor);
             }
         });
         // Sets selectorColor
         selectorColor.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                initColorPicker(com.appyvet.rangebarsample.Component.SELECTOR_COLOR, mSelectorColor, mSelectorColor);
+                initColorPicker(Component.SELECTOR_COLOR, mSelectorColor, mSelectorColor);
             }
         });
 
         selectorBoundaryColor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initColorPicker(com.appyvet.rangebarsample.Component.SELECTOR_BOUNDARY_COLOR, mSelectorBoundaryColor, mSelectorBoundaryColor);
+                initColorPicker(Component.SELECTOR_BOUNDARY_COLOR, mSelectorBoundaryColor, mSelectorBoundaryColor);
             }
         });
 
@@ -359,7 +363,7 @@ public class MainActivity extends Activity implements
      */
 
     @Override
-    public void onColorSelected(int newColor, com.appyvet.rangebarsample.Component component) {
+    public void onColorSelected(int newColor, Component component) {
         Log.d("Color selected", " new color = " + newColor + ",compoment = " + component);
         String hexColor = String.format("#%06X", (0xFFFFFF & newColor));
 
@@ -435,7 +439,7 @@ public class MainActivity extends Activity implements
      * @param initialColor Integer specifying the initial color choice. *
      * @param defaultColor Integer specifying the default color choice.
      */
-    private void initColorPicker(com.appyvet.rangebarsample.Component component, int initialColor, int defaultColor) {
+    private void initColorPicker(Component component, int initialColor, int defaultColor) {
         ColorPickerDialog colorPicker = ColorPickerDialog
                 .newInstance(R.string.colorPickerTitle, Utils.ColorUtils.colorChoice(this),
                         initialColor, 4, ColorPickerDialog.SIZE_SMALL, component);

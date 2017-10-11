@@ -21,19 +21,19 @@
         android:textSize="40sp"/>
 
     <com.appyvet.materialrangebar.RangeBar
-        xmlns:custom="http://schemas.android.com/apk/res-auto"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/rangebar1"
         android:layout_width="match_parent"
         android:layout_height="72dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        custom:pinMaxFont="10sp"
-        custom:selectorBoundaryColor="@color/accent"
-        custom:selectorBoundarySize="2dp"
-        custom:selectorSize="10dp"
-        custom:tickEnd="10"
-        custom:tickInterval="1"
-        custom:tickStart="5"/>
+        app:mrb_pinMaxFont="10sp"
+        app:mrb_rangeBarPaddingBottom="20dp"
+        app:mrb_selectorBoundaryColor="@color/accent"
+        app:mrb_selectorBoundarySize="2dp"
+        app:mrb_pinTextColor="#ACD123"
+        app:mrb_selectorSize="10dp"
+        app:mrb_tickEnd="10"
+        app:mrb_tickInterval="1"
+        app:mrb_tickStart="5"/>
 
     <include
         layout="@layout/divider"

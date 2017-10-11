@@ -2,9 +2,8 @@ apply plugin: 'com.android.application'
 
 dependencies {
     compile project(':materialrangebar')
-    //compile 'com.appyvet:materialrangebar:1.4'
+//    compile 'com.appyvet:materialrangebar:1.4'
     compile 'com.android.support:cardview-v7:26.0.1'
-    compile 'com.android.support:support-v4:26.0.1'
 }
 android {
     compileSdkVersion 26
@@ -27,6 +26,7 @@ android {
         }
     }
 }
+
 def propFile = file('../keystore.properties')
 if (propFile.canRead()) {
     def Properties p = new Properties()
