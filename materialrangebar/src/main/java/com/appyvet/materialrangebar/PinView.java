@@ -87,7 +87,7 @@ class PinView extends View {
 
     private float mCircleRadiusPx;
 
-    private com.appyvet.materialrangebar.IRangeBarFormatter formatter;
+    private IRangeBarFormatter formatter;
 
     private float mMinPinFont = RangeBar.DEFAULT_MIN_PIN_FONT_SP;
 
@@ -121,7 +121,7 @@ class PinView extends View {
      * @param circleRadius        the radius of the selector circle
      * @param circleColor         the color of the selector circle
      * @param circleBoundaryColor The color of the selector circle boundary
-     * @param circleBoundarySize  The size of the selector circle boundary line
+     * @param circleBoundarySize  The size of the selector circle boundary line in dp
      * @param minFont             the minimum font size for the pin text
      * @param maxFont             the maximum font size for the pin text
      * @param pinsAreTemporary    whether to show the pin initially or just the circle

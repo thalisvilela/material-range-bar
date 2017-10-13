@@ -1,6 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
-
 /**
  In order to push the library to Bintray we need to execute the
  following gradle commands in the given sequence.
@@ -17,7 +15,7 @@ ext {
     libraryName = 'Material Rangebar'
     artifact = 'materialrangebar'
 
-    libraryDescription = 'MaterialRangeBar is a fork of https://github.com/edmodo/range-bar that adds some basic material styling, as well as start and end values, values as floats and some other things. It is aiming to mimic this It is similar to an enhanced SeekBar widget, though it doesn\'t make use of the SeekBar. It provides for the selection of a range of values as well as for a single value. The selectable range values are discrete values designated by tick marks; the pin (handle) will snap to the nearest tick mark.'
+    libraryDescription = 'MaterialRangeBar is a fork from https://github.com/edmodo/range-bar that adds some basic material styling, as well as start and end values, as floats and some other things. It is similar to an enhanced SeekBar widget, though it doesn\'t make use of the SeekBar. It provides for the selection of a range of values as well as for a single value. The selectable range values are discrete values designated by tick marks; the pin (handle) will snap to the nearest tick mark.'
 
     siteUrl = 'https://github.com/oli107/material-range-bar'
     gitUrl = 'https://github.com/oli107/material-range-bar.git'
@@ -49,7 +47,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:26.0.1'
+    compile 'com.android.support:support-compat:26.0.1'
 }
 
 /**
