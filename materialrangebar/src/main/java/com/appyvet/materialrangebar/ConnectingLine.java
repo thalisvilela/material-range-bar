@@ -17,7 +17,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.TypedValue;
 
 /**
  * Class representing the blue connecting line between the two thumbs.
@@ -45,14 +44,10 @@ public class ConnectingLine {
 
         final Resources res = ctx.getResources();
 
-        float connectingLineWeight1 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                connectingLineWeight,
-                res.getDisplayMetrics());
-
         // Initialize the paint, set values
         mPaint = new Paint();
         mPaint.setColor(connectingLineColor);
-        mPaint.setStrokeWidth(connectingLineWeight1);
+        mPaint.setStrokeWidth(connectingLineWeight);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setAntiAlias(true);
 

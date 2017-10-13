@@ -20,7 +20,7 @@ ext {
     siteUrl = 'https://github.com/oli107/material-range-bar'
     gitUrl = 'https://github.com/oli107/material-range-bar.git'
 
-    libraryVersion = '1.4'
+    libraryVersion = '1.4.1'
 
     developerId = 'krazykira'
     developerName = 'Sheraz Ahmed Khilji'
@@ -34,12 +34,12 @@ ext {
  * This is needed because we want to complie this as android library so that we can test it before publishing
  */
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion "26.0.2"
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName libraryVersion
 
@@ -47,7 +47,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-compat:26.0.1'
+    compile 'com.android.support:support-compat:27.0.2'
 }
 
 /**

@@ -33,6 +33,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -74,7 +75,7 @@ public class RangeBar extends View {
 
     public static final float DEFAULT_MAX_PIN_FONT_SP = 24;
 
-    private static final float DEFAULT_BAR_WEIGHT_PX = 2;
+    private static final float DEFAULT_BAR_WEIGHT_DP = 2;
 
     private static final float DEFAULT_CIRCLE_BOUNDARY_SIZE_DP = 0;
 
@@ -87,7 +88,7 @@ public class RangeBar extends View {
     // Corresponds to material indigo 500.
     private static final int DEFAULT_PIN_COLOR = 0xff3f51b5;
 
-    private static final float DEFAULT_CONNECTING_LINE_WEIGHT_PX = 4;
+    private static final float DEFAULT_CONNECTING_LINE_WEIGHT_DP = 4;
 
     // Corresponds to material indigo 500.
     private static final int DEFAULT_CONNECTING_LINE_COLOR = 0xff3f51b5;
@@ -100,7 +101,7 @@ public class RangeBar extends View {
 
     // Instance variables for all of the customizable attributes
 
-    private float mTickHeightDP = DEFAULT_TICK_HEIGHT_DP;
+    private float mTickHeight = DEFAULT_TICK_HEIGHT_DP;
 
     private float mTickStart = DEFAULT_TICK_START;
 
@@ -108,7 +109,7 @@ public class RangeBar extends View {
 
     private float mTickInterval = DEFAULT_TICK_INTERVAL;
 
-    private float mBarWeight = DEFAULT_BAR_WEIGHT_PX;
+    private float mBarWeight = DEFAULT_BAR_WEIGHT_DP;
 
     private int mBarColor = DEFAULT_BAR_COLOR;
 
@@ -116,7 +117,7 @@ public class RangeBar extends View {
 
     private int mTextColor = DEFAULT_TEXT_COLOR;
 
-    private float mConnectingLineWeight = DEFAULT_CONNECTING_LINE_WEIGHT_PX;
+    private float mConnectingLineWeight = DEFAULT_CONNECTING_LINE_WEIGHT_DP;
 
     private int mConnectingLineColor = DEFAULT_CONNECTING_LINE_COLOR;
 
@@ -142,9 +143,11 @@ public class RangeBar extends View {
     // setThumbIndices() is called, to correspond with intended usage
     private boolean mFirstSetTickCount = true;
 
-    private int mDefaultWidth = 500;
+    private final DisplayMetrics mDisplayMetrices = getResources().getDisplayMetrics();
 
-    private int mDefaultHeight = 150;
+    private int mDefaultWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 250, mDisplayMetrices);
+
+    private int mDefaultHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 75, mDisplayMetrices);
 
     private int mTickCount = (int) ((mTickEnd - mTickStart) / mTickInterval) + 1;
 
@@ -237,7 +240,7 @@ public class RangeBar extends View {
         bundle.putFloat("TICK_INTERVAL", mTickInterval);
         bundle.putInt("TICK_COLOR", mTickColor);
 
-        bundle.putFloat("TICK_HEIGHT_DP", mTickHeightDP);
+        bundle.putFloat("TICK_HEIGHT_DP", mTickHeight);
         bundle.putFloat("BAR_WEIGHT", mBarWeight);
         bundle.putInt("BAR_COLOR", mBarColor);
         bundle.putFloat("CONNECTING_LINE_WEIGHT", mConnectingLineWeight);
@@ -276,7 +279,7 @@ public class RangeBar extends View {
             mTickEnd = bundle.getFloat("TICK_END");
             mTickInterval = bundle.getFloat("TICK_INTERVAL");
             mTickColor = bundle.getInt("TICK_COLOR");
-            mTickHeightDP = bundle.getFloat("TICK_HEIGHT_DP");
+            mTickHeight = bundle.getFloat("TICK_HEIGHT_DP");
             mBarWeight = bundle.getFloat("BAR_WEIGHT");
             mBarColor = bundle.getInt("BAR_COLOR");
             mCircleSize = bundle.getFloat("CIRCLE_SIZE");
@@ -351,7 +354,7 @@ public class RangeBar extends View {
         // This is the initial point at which we know the size of the View.
 
         // Create the two thumb objects and position line in view
-        float density = getResources().getDisplayMetrics().density;
+        float density = mDisplayMetrices.density;
         float expandedPinRadius = mExpandedPinRadius / density;
 
         final float yPos = h - mBarPaddingBottom;
@@ -370,7 +373,7 @@ public class RangeBar extends View {
         final float marginLeft = Math.max(mExpandedPinRadius, mCircleSize);
 
         final float barLength = w - (2 * marginLeft);
-        mBar = new Bar(ctx, marginLeft, yPos, barLength, mTickCount, mTickHeightDP, mTickColor,
+        mBar = new Bar(ctx, marginLeft, yPos, barLength, mTickCount, mTickHeight, mTickColor,
                 mBarWeight, mBarColor);
 
         // Initialize thumbs to the desired indices
@@ -643,7 +646,7 @@ public class RangeBar extends View {
      */
     public void setTickHeight(float tickHeight) {
 
-        mTickHeightDP = tickHeight;
+        mTickHeight = tickHeight;
         createBar();
     }
 
@@ -651,7 +654,7 @@ public class RangeBar extends View {
      * Set the weight of the bar line and the tick lines in the range bar.
      *
      * @param barWeight Float specifying the weight of the bar and tick lines in
-     *                  px.
+     *                  DP.
      */
     public void setBarWeight(float barWeight) {
 
@@ -747,7 +750,8 @@ public class RangeBar extends View {
     /**
      * Set the size of the selector Boundary.
      *
-     * @param selectorBoundarySize Integer specifying the boundary size of ticks
+     * @param selectorBoundarySize Integer specifying the boundary size of ticks.
+     *                             Value should be in DP
      */
     public void setSelectorBoundarySize(int selectorBoundarySize) {
         mCircleBoundarySize = selectorBoundarySize;
@@ -758,7 +762,7 @@ public class RangeBar extends View {
      * Set the weight of the connecting line between the thumbs.
      *
      * @param connectingLineWeight Float specifying the weight of the connecting
-     *                             line.
+     *                             line. Value should be in DP
      */
     public void setConnectingLineWeight(float connectingLineWeight) {
 
@@ -780,9 +784,9 @@ public class RangeBar extends View {
 
     /**
      * If this is set, the thumb images will be replaced with a circle of the
-     * specified radius. Default width = 20dp.
+     * specified radius. Default width = 12dp.
      *
-     * @param pinRadius Float specifying the radius of the thumbs to be drawn.
+     * @param pinRadius Float specifying the radius of the thumbs to be drawn. Value should be in DP
      */
     public void setPinRadius(float pinRadius) {
         mExpandedPinRadius = pinRadius;
@@ -1087,50 +1091,64 @@ public class RangeBar extends View {
                 Log.e(TAG, "tickCount less than 2; invalid tickCount. XML input ignored.");
             }
 
-            mTickHeightDP = ta
-                    .getDimension(R.styleable.RangeBar_mrb_tickHeight, DEFAULT_TICK_HEIGHT_DP);
-            mBarWeight = ta.getDimension(R.styleable.RangeBar_mrb_barWeight, DEFAULT_BAR_WEIGHT_PX);
+            mTickHeight = ta.getDimension(R.styleable.RangeBar_mrb_tickHeight,
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_TICK_HEIGHT_DP,
+                            mDisplayMetrices)
+            );
+            mBarWeight = ta.getDimension(R.styleable.RangeBar_mrb_barWeight,
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_BAR_WEIGHT_DP,
+                            mDisplayMetrices)
+            );
+            mCircleSize = ta.getDimension(R.styleable.RangeBar_mrb_selectorSize,
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_CIRCLE_SIZE_DP,
+                            mDisplayMetrices)
+            );
+            mCircleBoundarySize = ta.getDimension(R.styleable.RangeBar_mrb_selectorBoundarySize,
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_CIRCLE_BOUNDARY_SIZE_DP,
+                            mDisplayMetrices)
+            );
+            mConnectingLineWeight = ta.getDimension(R.styleable.RangeBar_mrb_connectingLineWeight,
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_CONNECTING_LINE_WEIGHT_DP,
+                            mDisplayMetrices)
+            );
+            mExpandedPinRadius = ta.getDimension(R.styleable.RangeBar_mrb_pinRadius,
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_EXPANDED_PIN_RADIUS_DP,
+                            mDisplayMetrices)
+            );
+            mPinPadding = ta.getDimension(R.styleable.RangeBar_mrb_pinPadding,
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_PIN_PADDING_DP,
+                            mDisplayMetrices)
+            );
+            mBarPaddingBottom = ta.getDimension(R.styleable.RangeBar_mrb_rangeBarPaddingBottom,
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_BAR_PADDING_BOTTOM_DP,
+                            mDisplayMetrices)
+            );
+
             mBarColor = ta.getColor(R.styleable.RangeBar_mrb_rangeBarColor, DEFAULT_BAR_COLOR);
             mTextColor = ta.getColor(R.styleable.RangeBar_mrb_pinTextColor, DEFAULT_TEXT_COLOR);
             mPinColor = ta.getColor(R.styleable.RangeBar_mrb_pinColor, DEFAULT_PIN_COLOR);
             mActiveBarColor = mBarColor;
-            mCircleSize = ta.getDimension(R.styleable.RangeBar_mrb_selectorSize,
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_CIRCLE_SIZE_DP,
-                            getResources().getDisplayMetrics())
-            );
 
 
             mCircleColor = ta.getColor(R.styleable.RangeBar_mrb_selectorColor,
                     DEFAULT_CONNECTING_LINE_COLOR);
             mCircleBoundaryColor = ta.getColor(R.styleable.RangeBar_mrb_selectorBoundaryColor,
                     DEFAULT_CONNECTING_LINE_COLOR);
-            mCircleBoundarySize = ta.getDimension(R.styleable.RangeBar_mrb_selectorBoundarySize,
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_CIRCLE_BOUNDARY_SIZE_DP,
-                            getResources().getDisplayMetrics())
-            );
+
 
             mActiveCircleColor = mCircleColor;
             mTickColor = ta.getColor(R.styleable.RangeBar_mrb_tickColor, DEFAULT_TICK_COLOR);
             mActiveTickColor = mTickColor;
-            mConnectingLineWeight = ta.getDimension(R.styleable.RangeBar_mrb_connectingLineWeight,
-                    DEFAULT_CONNECTING_LINE_WEIGHT_PX);
+
             mConnectingLineColor = ta.getColor(R.styleable.RangeBar_mrb_connectingLineColor,
                     DEFAULT_CONNECTING_LINE_COLOR);
             mActiveConnectingLineColor = mConnectingLineColor;
-            mExpandedPinRadius = ta
-                    .getDimension(R.styleable.RangeBar_mrb_pinRadius, TypedValue.applyDimension(
-                            TypedValue.COMPLEX_UNIT_DIP,
-                            DEFAULT_EXPANDED_PIN_RADIUS_DP, getResources().getDisplayMetrics()));
-            mPinPadding = ta.getDimension(R.styleable.RangeBar_mrb_pinPadding, TypedValue
-                    .applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_PIN_PADDING_DP,
-                            getResources().getDisplayMetrics()));
-            mBarPaddingBottom = ta.getDimension(R.styleable.RangeBar_mrb_rangeBarPaddingBottom,
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                            DEFAULT_BAR_PADDING_BOTTOM_DP, getResources().getDisplayMetrics()));
+
+
             mIsRangeBar = ta.getBoolean(R.styleable.RangeBar_mrb_rangeBar, true);
             mArePinsTemporary = ta.getBoolean(R.styleable.RangeBar_mrb_temporaryPins, true);
 
-            float density = getResources().getDisplayMetrics().density;
+            float density = mDisplayMetrices.density;
             mMinPinFont = ta.getDimension(R.styleable.RangeBar_mrb_pinMinFont,
                     DEFAULT_MIN_PIN_FONT_SP * density);
             mMaxPinFont = ta.getDimension(R.styleable.RangeBar_mrb_pinMaxFont,
@@ -1151,7 +1169,7 @@ public class RangeBar extends View {
                 getYPos(),
                 getBarLength(),
                 mTickCount,
-                mTickHeightDP,
+                mTickHeight,
                 mTickColor,
                 mBarWeight,
                 mBarColor);
