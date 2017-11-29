@@ -230,7 +230,7 @@ public class MainActivity extends Activity implements
 
             @Override
             public void onProgressChanged(SeekBar barWeightSeek, int progress, boolean fromUser) {
-                rangebar.setBarWeight(progress);
+                rangebar.setBarWeight(getValueInDP(progress));
                 barWeight.setText("barWeight = " + progress);
             }
 
@@ -250,7 +250,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onProgressChanged(SeekBar connectingLineWeightSeek, int progress,
                                           boolean fromUser) {
-                rangebar.setConnectingLineWeight(progress);
+                rangebar.setConnectingLineWeight(getValueInDP(progress));
                 connectingLineWeight.setText("connectingLineWeight = " + progress);
             }
 
@@ -269,7 +269,7 @@ public class MainActivity extends Activity implements
         thumbRadiusSeek.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar thumbRadiusSeek, int progress, boolean fromUser) {
-                rangebar.setPinRadius(progress);
+                rangebar.setPinRadius(getValueInDP(progress));
                 thumbRadius.setText("Pin Radius = " + progress);
             }
 
@@ -288,10 +288,8 @@ public class MainActivity extends Activity implements
         thumbBoundarySeek.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar thumbRadiusSeek, int progress, boolean fromUser) {
-                int valueInDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                        progress,
-                        getResources().getDisplayMetrics());
-                rangebar.setSelectorBoundarySize(valueInDp);
+
+                rangebar.setSelectorBoundarySize(getValueInDP(progress));
                 thumbBoundarySize.setText("Selector Boundary Size = " + progress);
             }
 
@@ -353,6 +351,13 @@ public class MainActivity extends Activity implements
             }
         });
 
+    }
+    private int getValueInDP(int value)
+    {
+        int valueInDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                value,
+                getResources().getDisplayMetrics());
+        return valueInDp;
     }
 
     /**

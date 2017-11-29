@@ -16,7 +16,6 @@ package com.appyvet.materialrangebar;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.TypedValue;
 
 /**
  * This class represents the underlying gray bar in the RangeBar (without the
@@ -54,7 +53,7 @@ public class Bar {
      * @param y            the y co-ordinate
      * @param length       the length of the bar in px
      * @param tickCount    the number of ticks on the bar
-     * @param tickHeightDP the height of each tick
+     * @param tickHeight the height of each tick
      * @param tickColor    the color of each tick
      * @param barWeight    the weight of the bar
      * @param barColor     the color of the bar
@@ -64,7 +63,7 @@ public class Bar {
             float y,
             float length,
             int tickCount,
-            float tickHeightDP,
+            float tickHeight,
             int tickColor,
             float barWeight,
             int barColor) {
@@ -75,10 +74,7 @@ public class Bar {
 
         mNumSegments = tickCount - 1;
         mTickDistance = length / mNumSegments;
-        mTickHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                tickHeightDP,
-                ctx.getResources().getDisplayMetrics());
-
+        mTickHeight = tickHeight;
         // Initialize the paint.
         mBarPaint = new Paint();
         mBarPaint.setColor(barColor);

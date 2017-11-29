@@ -16,6 +16,7 @@ Developers can customize the following attributes (both via XML and programatica
 
 ### Change Log
 ```
+1.4.1 - Small Ui fixes
 1.4 - Added mrb_ prefix to all attributes. Also added mrb_selectorBoundaryColor and mrb_selectorBoundarySize attribute.  
 1.3 - Stopped pins appearing on initialisation when temporary. Margin correct even if pin radius = 0. PR to correct motion down
 1.2 - NPE fixed for movePin
@@ -81,7 +82,7 @@ This is a rangebar with both a lower and upper value
 <com.appyvet.materialrangebar.RangeBar
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:mrb_pinMaxFont="10sp"
@@ -158,7 +159,7 @@ repositories {
 
 ```groovy
 dependencies {
-    compile 'com.appyvet:materialrangebar:1.4'
+    compile 'com.appyvet:materialrangebar:1.4.1'
 }
 ```
 
