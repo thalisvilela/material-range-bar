@@ -146,10 +146,9 @@ How to Use
 
 **In your project build.gradle. Add the following lines**
 ```groovy
-repositories {
-    jcenter()
-    maven {
-        url  "https://dl.bintray.com/krazykira/maven" 
+allprojects {
+    repositories {
+        jcenter()
     }
 }
 ```
