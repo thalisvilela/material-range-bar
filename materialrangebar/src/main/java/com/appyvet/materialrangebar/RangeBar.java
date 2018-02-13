@@ -111,6 +111,8 @@ public class RangeBar extends View {
 
     private float mBarWeight = DEFAULT_BAR_WEIGHT_DP;
 
+    private boolean mIsBarRounded = false;
+
     private int mBarColor = DEFAULT_BAR_COLOR;
 
     private int mPinColor = DEFAULT_PIN_COLOR;
@@ -242,6 +244,7 @@ public class RangeBar extends View {
 
         bundle.putFloat("TICK_HEIGHT_DP", mTickHeight);
         bundle.putFloat("BAR_WEIGHT", mBarWeight);
+        bundle.putBoolean("BAR_ROUNDED", mIsBarRounded);
         bundle.putInt("BAR_COLOR", mBarColor);
         bundle.putFloat("CONNECTING_LINE_WEIGHT", mConnectingLineWeight);
         bundle.putInt("CONNECTING_LINE_COLOR", mConnectingLineColor);
@@ -281,6 +284,7 @@ public class RangeBar extends View {
             mTickColor = bundle.getInt("TICK_COLOR");
             mTickHeight = bundle.getFloat("TICK_HEIGHT_DP");
             mBarWeight = bundle.getFloat("BAR_WEIGHT");
+            mIsBarRounded = bundle.getBoolean("BAR_ROUNDED", false);
             mBarColor = bundle.getInt("BAR_COLOR");
             mCircleSize = bundle.getFloat("CIRCLE_SIZE");
             mCircleColor = bundle.getInt("CIRCLE_COLOR");
@@ -374,7 +378,7 @@ public class RangeBar extends View {
 
         final float barLength = w - (2 * marginLeft);
         mBar = new Bar(ctx, marginLeft, yPos, barLength, mTickCount, mTickHeight, mTickColor,
-                mBarWeight, mBarColor);
+                mBarWeight, mBarColor, mIsBarRounded);
 
         // Initialize thumbs to the desired indices
         if (mIsRangeBar) {
@@ -659,6 +663,19 @@ public class RangeBar extends View {
     public void setBarWeight(float barWeight) {
 
         mBarWeight = barWeight;
+        createBar();
+    }
+
+    public boolean isBarRounded() {
+        return mIsBarRounded;
+    }
+
+    /**
+     * set the bar with rounded corners
+     * @param isBarRounded flag
+     */
+    public void setBarRounded(boolean isBarRounded) {
+        this.mIsBarRounded = isBarRounded;
         createBar();
     }
 
@@ -1147,6 +1164,7 @@ public class RangeBar extends View {
 
             mIsRangeBar = ta.getBoolean(R.styleable.RangeBar_mrb_rangeBar, true);
             mArePinsTemporary = ta.getBoolean(R.styleable.RangeBar_mrb_temporaryPins, true);
+            mIsBarRounded = ta.getBoolean(R.styleable.RangeBar_mrb_rangeBar_rounded, false);
 
             float density = mDisplayMetrices.density;
             mMinPinFont = ta.getDimension(R.styleable.RangeBar_mrb_pinMinFont,
@@ -1172,7 +1190,8 @@ public class RangeBar extends View {
                 mTickHeight,
                 mTickColor,
                 mBarWeight,
-                mBarColor);
+                mBarColor,
+                mIsBarRounded);
         invalidate();
     }
 

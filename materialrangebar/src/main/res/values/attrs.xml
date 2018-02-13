@@ -20,6 +20,7 @@
         <attr name="mrb_selectorColor" format="reference|color"/>
         <attr name="mrb_rangeBar" format="boolean"/>
         <attr name="mrb_temporaryPins" format="boolean"/>
+        <attr name="mrb_rangeBar_rounded" format="boolean"/>
         <attr name="mrb_connectingLineWeight" format="dimension"/>
         <attr name="mrb_connectingLineColor" format="reference|color"/>
         <attr name="mrb_pinRadius" format="dimension"/>

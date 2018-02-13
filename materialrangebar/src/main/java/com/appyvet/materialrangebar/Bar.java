@@ -59,14 +59,15 @@ public class Bar {
      * @param barColor     the color of the bar
      */
     public Bar(Context ctx,
-            float x,
-            float y,
-            float length,
-            int tickCount,
-            float tickHeight,
-            int tickColor,
-            float barWeight,
-            int barColor) {
+               float x,
+               float y,
+               float length,
+               int tickCount,
+               float tickHeight,
+               int tickColor,
+               float barWeight,
+               int barColor,
+               boolean isBarRounded) {
 
         mLeftX = x;
         mRightX = x + length;
@@ -80,6 +81,9 @@ public class Bar {
         mBarPaint.setColor(barColor);
         mBarPaint.setStrokeWidth(barWeight);
         mBarPaint.setAntiAlias(true);
+        if(isBarRounded){
+            mBarPaint.setStrokeCap(Paint.Cap.ROUND);
+        }
         mTickPaint = new Paint();
         mTickPaint.setColor(tickColor);
         mTickPaint.setStrokeWidth(barWeight);
