@@ -16,6 +16,7 @@ Developers can customize the following attributes (both via XML and programatica
 
 ### Change Log
 ```
+1.4.2 - Added option for rounding status Bar progress using mrb_rangeBar_rounded. Also Implemented seekbar to select the nearest tick, when clicked. Also Fixed Rangebar issue that was causing right pin to move left of left pin when both had same value.
 1.4.1 - Small Ui fixes
 1.4 - Added mrb_ prefix to all attributes. Also added mrb_selectorBoundaryColor and mrb_selectorBoundarySize attribute.  
 1.3 - Stopped pins appearing on initialisation when temporary. Margin correct even if pin radius = 0. PR to correct motion down
@@ -41,6 +42,8 @@ mrb_rangeBar | boolean
 mrb_barWeight | dimension
 mrb_rangeBarColor | reference or color
 mrb_rangeBarPaddingBottom | dimension
+mrb_rangeBar_rounded | boolean
+mrb_temporaryPins | boolean
 mrb_connectingLineWeight | dimension
 mrb_connectingLineColor | reference or color
 ```
@@ -91,6 +94,7 @@ This is a rangebar with both a lower and upper value
         app:mrb_selectorBoundarySize="2dp"
         app:mrb_pinTextColor="#ACD123"
         app:mrb_selectorSize="10dp"
+        app:mrb_temporaryPins="true"
         app:mrb_tickEnd="10"
         app:mrb_tickInterval="1"
         app:mrb_tickStart="5"/>
@@ -158,7 +162,7 @@ allprojects {
 
 ```groovy
 dependencies {
-    implementation 'com.appyvet:materialrangebar:1.4.1'
+    implementation 'com.appyvet:materialrangebar:1.4.2'
 }
 ```
 
@@ -166,7 +170,7 @@ dependencies {
 **if you are already using android support library inside your project and run into multiple version issues related to android support library then modify the gradle path like this**
 ```groovy
 dependencies {
-    compile ('com.appyvet:materialrangebar:1.4.1') {
+    compile ('com.appyvet:materialrangebar:1.4.2') {
             exclude module: 'support-compat'
     }
 }

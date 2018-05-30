@@ -32,6 +32,7 @@
         app:mrb_pinTextColor="#ACD123"
         app:mrb_selectorSize="10dp"
         app:mrb_tickEnd="10"
+        app:mrb_temporaryPins="true"
         app:mrb_tickInterval="1"
         app:mrb_tickStart="5"
         app:mrb_rangeBar_rounded="true"/>
