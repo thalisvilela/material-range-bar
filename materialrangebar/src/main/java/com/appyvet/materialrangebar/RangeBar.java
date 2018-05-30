@@ -1301,6 +1301,33 @@ public class RangeBar extends View {
     }
 
     /**
+     * Gets the distance between x and the left pin. If the left and right pins are equal, this
+     * returns 0 if x is < the pins' position. Also returns 0 if the bar is not a range bar.
+     *
+     * @param x the x-coordinate to be checked
+     * @return the distance between x and the left pin, or 0 if the pins are equal and x is to the left.
+     * Also returns 0 if the bar is not a range bar.
+     */
+    private float getLeftThumbXDistance(float x) {
+        if (isRangeBar()) {
+            float leftThumbX = mLeftThumb.getX();
+            return (leftThumbX == mRightThumb.getX() && x < leftThumbX) ? 0 : Math.abs(leftThumbX - x);
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Gets the distance between x and the right pin
+     *
+     * @param x the x-coordinate to be checked
+     * @return the distance between x and the right pin
+     */
+    private float getRightThumbXDistance(float x) {
+        return Math.abs(mRightThumb.getX() - x);
+    }
+
+    /**
      * Handles a {@link android.view.MotionEvent#ACTION_DOWN} event.
      *
      * @param x the x-coordinate of the down action
@@ -1340,9 +1367,8 @@ public class RangeBar extends View {
             releasePin(mRightThumb);
 
         } else {
-
-            float leftThumbXDistance = mIsRangeBar ? Math.abs(mLeftThumb.getX() - x) : 0;
-            float rightThumbXDistance = Math.abs(mRightThumb.getX() - x);
+            float leftThumbXDistance = getLeftThumbXDistance(x);
+            float rightThumbXDistance = getRightThumbXDistance(x);
             //move if is rangeBar and left index is lower of right one
             //if is not range bar leftThumbXDistance is always 0
             if (leftThumbXDistance < rightThumbXDistance && mIsRangeBar) {
