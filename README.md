@@ -158,7 +158,7 @@ allprojects {
 
 ```groovy
 dependencies {
-    compile 'com.appyvet:materialrangebar:1.4.1'
+    implementation 'com.appyvet:materialrangebar:1.4.1'
 }
 ```
 
