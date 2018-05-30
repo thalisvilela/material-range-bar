@@ -8,6 +8,8 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -348,6 +350,15 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View v) {
                 initColorPicker(Component.SELECTOR_BOUNDARY_COLOR, mSelectorBoundaryColor, mSelectorBoundaryColor);
+            }
+        });
+
+        CheckBox cbRoundedBar = findViewById(R.id.cbRoundedBar);
+        cbRoundedBar.setChecked(rangebar.isBarRounded());
+        cbRoundedBar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                rangebar.setBarRounded(isChecked);
             }
         });
 
