@@ -57,6 +57,7 @@ public class Bar {
      * @param tickColor  the color of each tick
      * @param barWeight  the weight of the bar
      * @param barColor   the color of the bar
+     * @param isBarRounded if the bar has rounded edges or not
      */
     public Bar(Context ctx,
                float x,
