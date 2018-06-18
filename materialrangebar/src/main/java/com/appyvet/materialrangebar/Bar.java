@@ -1,14 +1,14 @@
 /*
- * Copyright 2013, Edmodo, Inc. 
+ * Copyright 2013, Edmodo, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this work except in compliance with the License.
  * You may obtain a copy of the License in the LICENSE file, or at:
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" 
- * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language 
- * governing permissions and limitations under the License. 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS"
+ * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 package com.appyvet.materialrangebar;
@@ -48,15 +48,16 @@ public class Bar {
     /**
      * Bar constructor
      *
-     * @param ctx          the context
-     * @param x            the start x co-ordinate
-     * @param y            the y co-ordinate
-     * @param length       the length of the bar in px
-     * @param tickCount    the number of ticks on the bar
+     * @param ctx        the context
+     * @param x          the start x co-ordinate
+     * @param y          the y co-ordinate
+     * @param length     the length of the bar in px
+     * @param tickCount  the number of ticks on the bar
      * @param tickHeight the height of each tick
-     * @param tickColor    the color of each tick
-     * @param barWeight    the weight of the bar
-     * @param barColor     the color of the bar
+     * @param tickColor  the color of each tick
+     * @param barWeight  the weight of the bar
+     * @param barColor   the color of the bar
+     * @param isBarRounded if the bar has rounded edges or not
      */
     public Bar(Context ctx,
                float x,
@@ -81,7 +82,7 @@ public class Bar {
         mBarPaint.setColor(barColor);
         mBarPaint.setStrokeWidth(barWeight);
         mBarPaint.setAntiAlias(true);
-        if(isBarRounded){
+        if (isBarRounded) {
             mBarPaint.setStrokeCap(Paint.Cap.ROUND);
         }
         mTickPaint = new Paint();
@@ -142,7 +143,14 @@ public class Bar {
      */
     public int getNearestTickIndex(PinView thumb) {
 
-        return (int) ((thumb.getX() - mLeftX + mTickDistance / 2f) / mTickDistance);
+        int tickIndex = (int) ((thumb.getX() - mLeftX + mTickDistance / 2f) / mTickDistance);
+
+        if (tickIndex > mNumSegments) {
+            tickIndex = mNumSegments;
+        } else if (tickIndex < 0) {
+            tickIndex = 0;
+        }
+        return tickIndex;
     }
 
 
