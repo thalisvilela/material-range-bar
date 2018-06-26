@@ -16,6 +16,7 @@ Developers can customize the following attributes (both via XML and programatica
 
 ### Change Log
 ```
+1.4.3 - Fixes an issue where you user was able to drag a thumb outside of the valid range of Rangebar.
 1.4.2 - Added option for rounding status Bar progress using mrb_rangeBar_rounded. Also Implemented seekbar to select the nearest tick, when clicked. Also Fixed Rangebar issue that was causing right pin to move left of left pin when both had same value.
 1.4.1 - Small Ui fixes
 1.4 - Added mrb_ prefix to all attributes. Also added mrb_selectorBoundaryColor and mrb_selectorBoundarySize attribute.  
@@ -162,7 +163,7 @@ allprojects {
 
 ```groovy
 dependencies {
-    implementation 'com.appyvet:materialrangebar:1.4.2'
+    implementation 'com.appyvet:materialrangebar:1.4.3'
 }
 ```
 
@@ -170,7 +171,7 @@ dependencies {
 **if you are already using android support library inside your project and run into multiple version issues related to android support library then modify the gradle path like this**
 ```groovy
 dependencies {
-    compile ('com.appyvet:materialrangebar:1.4.2') {
+    compile ('com.appyvet:materialrangebar:1.4.3') {
             exclude module: 'support-compat'
     }
 }

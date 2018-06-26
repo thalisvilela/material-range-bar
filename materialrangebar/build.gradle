@@ -22,7 +22,7 @@ ext {
     siteUrl = 'https://github.com/oli107/material-range-bar'
     gitUrl = 'https://github.com/oli107/material-range-bar.git'
 
-    libraryVersion = '1.4.2'
+    libraryVersion = '1.4.3'
 
     developerId = 'krazykira'
     developerName = 'Sheraz Ahmed Khilji'
@@ -44,12 +44,11 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName libraryVersion
-
     }
 }
 
 dependencies {
-    compile 'com.android.support:support-compat:27.1.1'
+    implementation 'com.android.support:support-compat:27.1.1'
 }
 
 /**
