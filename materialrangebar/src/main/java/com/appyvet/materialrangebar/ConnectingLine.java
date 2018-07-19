@@ -46,6 +46,11 @@ public class ConnectingLine {
     public ConnectingLine(float y, float connectingLineWeight,
                           ArrayList<Integer> connectingLineColors) {
 
+        //Need two colors
+        if(connectingLineColors.size() == 1){
+            connectingLineColors.add(connectingLineColors.get(0));
+        }
+
         colors = new int[connectingLineColors.size()];
         positions = new float[connectingLineColors.size()];
         for(int index = 0; index < connectingLineColors.size(); index++){
