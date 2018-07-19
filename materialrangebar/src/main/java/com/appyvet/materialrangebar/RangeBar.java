@@ -1174,7 +1174,7 @@ public class RangeBar extends View {
                 for (CharSequence colorHex : colors) {
                     String hexString = colorHex.toString();
 
-                    if(hexString.length() <= 4)
+                    if(hexString.length() == 4)
                         hexString += "000";
 
                     mConnectingLineColors.add(Color.parseColor(hexString));
