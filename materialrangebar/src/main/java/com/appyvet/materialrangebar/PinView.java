@@ -6,9 +6,9 @@
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" 
- * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language 
- * governing permissions and limitations under the License. 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS"
+ * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 package com.appyvet.materialrangebar;
@@ -16,15 +16,13 @@ package com.appyvet.materialrangebar;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.TypedValue;
 import android.view.View;
-
 
 
 /**
@@ -69,8 +67,6 @@ class PinView extends View {
     // Radius of the new thumb if selected
     private int mPinRadiusPx;
 
-    private ColorFilter mPinFilter;
-
     private float mPinPadding;
 
     private float mTextYPadding;
@@ -96,6 +92,8 @@ class PinView extends View {
     private boolean mPinsAreTemporary;
 
     private boolean mHasBeenPressed = false;
+
+    private int pinColor;
 
     // Constructors ////////////////////////////////////////////////////////////
 
@@ -172,8 +170,8 @@ class PinView extends View {
             mCircleBoundaryPaint.setStrokeWidth(circleBoundarySize);
             mCircleBoundaryPaint.setAntiAlias(true);
         }
-        //Color filter for the selection pin
-        mPinFilter = new LightingColorFilter(pinColor, pinColor);
+
+        this.pinColor = pinColor;
 
         // Sets the minimum touchable area, but allows it to expand based on
         // image size
@@ -290,7 +288,7 @@ class PinView extends View {
             calibrateTextSize(mTextPaint, text, mBounds.width());
             mTextPaint.getTextBounds(text, 0, text.length(), mBounds);
             mTextPaint.setTextAlign(Paint.Align.CENTER);
-            mPin.setColorFilter(mPinFilter);
+            DrawableCompat.setTint(mPin, pinColor);
             mPin.draw(canvas);
             canvas.drawText(text,
                     mX, mY - mPinRadiusPx - mPinPadding + mTextYPadding,
