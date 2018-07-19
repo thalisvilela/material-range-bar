@@ -14,7 +14,9 @@
 package com.appyvet.materialrangebar;
 
 import android.graphics.Canvas;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Shader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,9 @@ public class ConnectingLine {
 
     // Member Variables ////////////////////////////////////////////////////////
 
-    private final List<Paint> paints = new ArrayList<>();
+    private final int[] colors;
+    private final float[] positions;
+    private final Paint paint = new Paint();
 
     private final float mY;
 
@@ -42,21 +46,29 @@ public class ConnectingLine {
     public ConnectingLine(float y, float connectingLineWeight,
                           ArrayList<Integer> connectingLineColors) {
 
-        // Initialize the paint, set values
-        for (int color : connectingLineColors) {
-            Paint paint = new Paint();
-            paint.setColor(color);
-            paint.setStrokeWidth(connectingLineWeight);
-            paint.setStrokeCap(Paint.Cap.ROUND);
-            paint.setAntiAlias(true);
+        colors = new int[connectingLineColors.size()];
+        positions = new float[connectingLineColors.size()];
+        for(int index = 0; index < connectingLineColors.size(); index++){
+            colors[index] = connectingLineColors.get(index);
 
-            paints.add(paint);
+            positions[index] = (float) index / (connectingLineColors.size() - 1);
         }
+
+        paint.setStrokeWidth(connectingLineWeight);
+        paint.setStrokeCap(Paint.Cap.ROUND);
+        paint.setAntiAlias(true);
 
         mY = y;
     }
 
-    // Package-Private Methods /////////////////////////////////////////////////
+    private LinearGradient getLinearGradient(float startX, float endX, float height){
+
+        return new LinearGradient(startX, height, endX, height,
+                colors,
+                positions,
+                Shader.TileMode.REPEAT);
+    }
+
 
     /**
      * Draw the connecting line between the two thumbs in rangebar.
@@ -66,37 +78,9 @@ public class ConnectingLine {
      * @param rightThumb the right thumb
      */
     public void draw(Canvas canvas, PinView leftThumb, PinView rightThumb) {
-        int spacing = canvas.getWidth() / paints.size();
-        for (int index = 0; index < paints.size(); index++) {
-            float startX = spacing * index;
-            float endX = startX + spacing;
+        paint.setShader(getLinearGradient(0, canvas.getWidth(), mY));
 
-            float leftX = leftThumb.getX();
-            float rightX = rightThumb.getX();
-
-            float drawStartX = -1;
-            float drawEndX = -1;
-
-            if (startX < leftX && endX > rightX) {
-                drawStartX = leftX;
-                drawEndX = rightX;
-            } else if (startX >= leftX && endX <= rightX) {
-                drawStartX = startX;
-                drawEndX = endX;
-            } else if (startX >= leftX && endX >= rightX) {
-                drawStartX = startX;
-                drawEndX = endX - (endX - rightX);
-            } else if (endX >= leftX && endX <= rightX) {
-                drawStartX = leftX;
-                drawEndX = endX;
-            }
-
-            if (drawStartX > -1 && drawEndX > -1 && drawStartX <= drawEndX) {
-                Paint currentPaint = paints.get(index);
-
-                canvas.drawLine(drawStartX, mY, drawEndX, mY, currentPaint);
-            }
-        }
+        canvas.drawLine(leftThumb.getX(), mY, rightThumb.getX(), mY, paint);
 
     }
 
@@ -108,23 +92,8 @@ public class ConnectingLine {
      * @param leftMargin the left margin
      */
     public void draw(Canvas canvas, float leftMargin, PinView rightThumb) {
-        int spacing = canvas.getWidth() / paints.size();
-        for (int index = 0; index < paints.size(); index++) {
-            float startX = spacing * index;
-            if (index == 0)
-                startX += leftMargin;
+        paint.setShader(getLinearGradient(0, canvas.getWidth(), mY));
 
-            float endX = startX + spacing;
-
-            float drawEndX;
-            if (endX <= rightThumb.getX()) {
-                drawEndX = endX;
-            } else {
-                drawEndX = endX - (endX - rightThumb.getX());
-            }
-
-            Paint currentPaint = paints.get(index);
-            canvas.drawLine(startX, mY, drawEndX, mY, currentPaint);
-        }
+        canvas.drawLine(leftMargin, mY, rightThumb.getX(), mY, paint);
     }
 }
