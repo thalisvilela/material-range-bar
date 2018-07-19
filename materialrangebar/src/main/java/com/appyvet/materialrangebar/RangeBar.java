@@ -1,14 +1,14 @@
 /*
- * Copyright 2013, Edmodo, Inc. 
+ * Copyright 2013, Edmodo, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this work except in compliance with the License.
  * You may obtain a copy of the License in the LICENSE file, or at:
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" 
- * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language 
- * governing permissions and limitations under the License. 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS"
+ * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 package com.appyvet.materialrangebar;
@@ -39,6 +39,7 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -121,7 +122,7 @@ public class RangeBar extends View {
 
     private float mConnectingLineWeight = DEFAULT_CONNECTING_LINE_WEIGHT_DP;
 
-    private int mConnectingLineColor = DEFAULT_CONNECTING_LINE_COLOR;
+    private ArrayList<Integer> mConnectingLineColors = new ArrayList<>();
 
     private float mThumbRadiusDP = DEFAULT_EXPANDED_PIN_RADIUS_DP;
 
@@ -247,7 +248,7 @@ public class RangeBar extends View {
         bundle.putBoolean("BAR_ROUNDED", mIsBarRounded);
         bundle.putInt("BAR_COLOR", mBarColor);
         bundle.putFloat("CONNECTING_LINE_WEIGHT", mConnectingLineWeight);
-        bundle.putInt("CONNECTING_LINE_COLOR", mConnectingLineColor);
+        bundle.putIntegerArrayList("CONNECTING_LINE_COLOR", mConnectingLineColors);
 
         bundle.putFloat("CIRCLE_SIZE", mCircleSize);
         bundle.putInt("CIRCLE_COLOR", mCircleColor);
@@ -291,7 +292,7 @@ public class RangeBar extends View {
             mCircleBoundaryColor = bundle.getInt("CIRCLE_BOUNDARY_COLOR");
             mCircleBoundarySize = bundle.getFloat("CIRCLE_BOUNDARY_WIDTH");
             mConnectingLineWeight = bundle.getFloat("CONNECTING_LINE_WEIGHT");
-            mConnectingLineColor = bundle.getInt("CONNECTING_LINE_COLOR");
+            mConnectingLineColors = bundle.getIntegerArrayList("CONNECTING_LINE_COLOR");
 
             mThumbRadiusDP = bundle.getFloat("THUMB_RADIUS_DP");
             mExpandedPinRadius = bundle.getFloat("EXPANDED_PIN_RADIUS_DP");
@@ -402,8 +403,8 @@ public class RangeBar extends View {
         }
 
         // Create the line connecting the two thumbs.
-        mConnectingLine = new ConnectingLine(ctx, yPos, mConnectingLineWeight,
-                mConnectingLineColor);
+        mConnectingLine = new ConnectingLine(yPos, mConnectingLineWeight,
+                mConnectingLineColors);
     }
 
     @Override
@@ -672,6 +673,7 @@ public class RangeBar extends View {
 
     /**
      * set the bar with rounded corners
+     *
      * @param isBarRounded flag
      */
     public void setBarRounded(boolean isBarRounded) {
@@ -795,7 +797,13 @@ public class RangeBar extends View {
      */
     public void setConnectingLineColor(int connectingLineColor) {
 
-        mConnectingLineColor = connectingLineColor;
+        mConnectingLineColors.clear();
+        mConnectingLineColors.add(connectingLineColor);
+        createConnectingLine();
+    }
+
+    public void setConnectingLineColors(ArrayList<Integer> connectingLineColors) {
+        mConnectingLineColors = connectingLineColors;
         createConnectingLine();
     }
 
@@ -1039,12 +1047,12 @@ public class RangeBar extends View {
     public void setEnabled(boolean enabled) {
         if (!enabled) {
             mBarColor = DEFAULT_BAR_COLOR;
-            mConnectingLineColor = DEFAULT_BAR_COLOR;
+            setConnectingLineColor(DEFAULT_BAR_COLOR);
             mCircleColor = DEFAULT_BAR_COLOR;
             mTickColor = DEFAULT_BAR_COLOR;
         } else {
             mBarColor = mActiveBarColor;
-            mConnectingLineColor = mActiveConnectingLineColor;
+            setConnectingLineColor(mActiveConnectingLineColor);
             mCircleColor = mActiveCircleColor;
             mTickColor = mActiveTickColor;
         }
@@ -1157,10 +1165,23 @@ public class RangeBar extends View {
             mTickColor = ta.getColor(R.styleable.RangeBar_mrb_tickColor, DEFAULT_TICK_COLOR);
             mActiveTickColor = mTickColor;
 
-            mConnectingLineColor = ta.getColor(R.styleable.RangeBar_mrb_connectingLineColor,
+            int mConnectingLineColor = ta.getColor(R.styleable.RangeBar_mrb_connectingLineColor,
                     DEFAULT_CONNECTING_LINE_COLOR);
             mActiveConnectingLineColor = mConnectingLineColor;
 
+            CharSequence[] colors = ta.getTextArray(R.styleable.RangeBar_mrb_connectingLineColors);
+            if (colors != null && colors.length > 0) {
+                for (CharSequence colorHex : colors) {
+                    String hexString = colorHex.toString();
+
+                    if(hexString.length() <= 4)
+                        hexString += "000";
+
+                    mConnectingLineColors.add(Color.parseColor(hexString));
+                }
+            } else {
+                mConnectingLineColors.add(mConnectingLineColor);
+            }
 
             mIsRangeBar = ta.getBoolean(R.styleable.RangeBar_mrb_rangeBar, true);
             mArePinsTemporary = ta.getBoolean(R.styleable.RangeBar_mrb_temporaryPins, true);
@@ -1200,10 +1221,9 @@ public class RangeBar extends View {
      */
     private void createConnectingLine() {
 
-        mConnectingLine = new ConnectingLine(getContext(),
-                getYPos(),
+        mConnectingLine = new ConnectingLine(getYPos(),
                 mConnectingLineWeight,
-                mConnectingLineColor);
+                mConnectingLineColors);
         invalidate();
     }
 
@@ -1573,7 +1593,7 @@ public class RangeBar extends View {
 
     /**
      * @author robmunro
-     *         A callback that allows getting pin text exernally
+     * A callback that allows getting pin text exernally
      */
     public interface OnRangeBarTextListener {
 

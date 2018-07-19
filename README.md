@@ -47,6 +47,7 @@ mrb_rangeBar_rounded | boolean
 mrb_temporaryPins | boolean
 mrb_connectingLineWeight | dimension
 mrb_connectingLineColor | reference or color
+mrb_connectingLineColor | reference(array of hex colors)
 ```
 
 ### Pin Properties
