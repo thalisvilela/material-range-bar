@@ -44,6 +44,7 @@ class PinView extends View {
     // drawn but no value is given.
     private static final float DEFAULT_THUMB_RADIUS_DP = 14;
 
+    private static final float NO_ALPHA_CHANNEL = 255;
     // Member Variables ////////////////////////////////////////////////////////
 
     // Radius (in pixels) of the touch area of the thumb.
@@ -173,7 +174,11 @@ class PinView extends View {
             mCircleBoundaryPaint.setAntiAlias(true);
         }
         //Color filter for the selection pin
-        mPinFilter = new LightingColorFilter(pinColor, pinColor);
+        if (Color.alpha(pinColor) == NO_ALPHA_CHANNEL) {
+            mPinFilter = new LightingColorFilter(pinColor, pinColor);
+        } else {
+            mPinFilter = new PorterDuffColorFilter(pinColor, PorterDuff.Mode.SRC_OUT);
+        }
 
         // Sets the minimum touchable area, but allows it to expand based on
         // image size
