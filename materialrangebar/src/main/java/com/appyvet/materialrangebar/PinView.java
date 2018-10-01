@@ -16,12 +16,9 @@ package com.appyvet.materialrangebar;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -47,7 +44,6 @@ class PinView extends View {
     // drawn but no value is given.
     private static final float DEFAULT_THUMB_RADIUS_DP = 14;
 
-    private static final float NO_ALPHA_CHANNEL = 255;
     // Member Variables ////////////////////////////////////////////////////////
 
     // Radius (in pixels) of the touch area of the thumb.
