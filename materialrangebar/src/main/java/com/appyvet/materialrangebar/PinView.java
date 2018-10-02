@@ -97,8 +97,6 @@ class PinView extends View {
 
     private boolean mHasBeenPressed = false;
 
-    private boolean mShowOnlyPinLabel = false;
-
     // Constructors ////////////////////////////////////////////////////////////
 
     public PinView(Context context) {
@@ -127,11 +125,9 @@ class PinView extends View {
      * @param minFont             the minimum font size for the pin text
      * @param maxFont             the maximum font size for the pin text
      * @param pinsAreTemporary    whether to show the pin initially or just the circle
-     * @param showOnlyPinLabel    whether to only show the pin label and not the pin drawable.
      */
     public void init(Context ctx, float y, float pinRadiusDP, int pinColor, int textColor,
-                     float circleRadius, int circleColor, int circleBoundaryColor, float circleBoundarySize, float minFont, float maxFont,
-                     boolean pinsAreTemporary, boolean showOnlyPinLabel) {
+                     float circleRadius, int circleColor, int circleBoundaryColor, float circleBoundarySize, float minFont, float maxFont, boolean pinsAreTemporary) {
 
         mRes = ctx.getResources();
         mPin = ContextCompat.getDrawable(ctx, R.drawable.rotate);
@@ -140,7 +136,6 @@ class PinView extends View {
         mMinPinFont = minFont / mDensity;
         mMaxPinFont = maxFont / mDensity;
         mPinsAreTemporary = pinsAreTemporary;
-        mShowOnlyPinLabel = showOnlyPinLabel;
 
         mPinPadding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15,
                 mRes.getDisplayMetrics());
@@ -295,10 +290,8 @@ class PinView extends View {
             calibrateTextSize(mTextPaint, text, mBounds.width());
             mTextPaint.getTextBounds(text, 0, text.length(), mBounds);
             mTextPaint.setTextAlign(Paint.Align.CENTER);
-            if (!mShowOnlyPinLabel) {
-                mPin.setColorFilter(mPinFilter);
-                mPin.draw(canvas);
-            }
+            mPin.setColorFilter(mPinFilter);
+            mPin.draw(canvas);
             canvas.drawText(text,
                     mX, mY - mPinRadiusPx - mPinPadding + mTextYPadding,
                     mTextPaint);
