@@ -200,6 +200,8 @@ public class RangeBar extends View {
 
     private boolean mArePinsTemporary = true;
 
+    private boolean mShowOnlyPinLabel = false;
+
     private PinTextFormatter mPinTextFormatter = new PinTextFormatter() {
         @Override
         public String getText(String value) {
@@ -259,6 +261,7 @@ public class RangeBar extends View {
         bundle.putFloat("BAR_PADDING_BOTTOM", mBarPaddingBottom);
         bundle.putBoolean("IS_RANGE_BAR", mIsRangeBar);
         bundle.putBoolean("ARE_PINS_TEMPORARY", mArePinsTemporary);
+        bundle.putBoolean("SHOW_ONLY_PIN_LABEL", mShowOnlyPinLabel);
         bundle.putInt("LEFT_INDEX", mLeftIndex);
         bundle.putInt("RIGHT_INDEX", mRightIndex);
 
@@ -299,6 +302,7 @@ public class RangeBar extends View {
             mBarPaddingBottom = bundle.getFloat("BAR_PADDING_BOTTOM");
             mIsRangeBar = bundle.getBoolean("IS_RANGE_BAR");
             mArePinsTemporary = bundle.getBoolean("ARE_PINS_TEMPORARY");
+            mShowOnlyPinLabel = bundle.getBoolean("SHOW_ONLY_PIN_LABEL");
 
             mLeftIndex = bundle.getInt("LEFT_INDEX");
             mRightIndex = bundle.getInt("RIGHT_INDEX");
@@ -366,12 +370,12 @@ public class RangeBar extends View {
             mLeftThumb = new PinView(ctx);
             mLeftThumb.setFormatter(mFormatter);
             mLeftThumb.init(ctx, yPos, expandedPinRadius, mPinColor, mTextColor, mCircleSize,
-                    mCircleColor, mCircleBoundaryColor, mCircleBoundarySize, mMinPinFont, mMaxPinFont, mArePinsTemporary);
+                    mCircleColor, mCircleBoundaryColor, mCircleBoundarySize, mMinPinFont, mMaxPinFont, mArePinsTemporary, mShowOnlyPinLabel);
         }
         mRightThumb = new PinView(ctx);
         mRightThumb.setFormatter(mFormatter);
         mRightThumb.init(ctx, yPos, expandedPinRadius, mPinColor, mTextColor, mCircleSize,
-                mCircleColor, mCircleBoundaryColor, mCircleBoundarySize, mMinPinFont, mMaxPinFont, mArePinsTemporary);
+                mCircleColor, mCircleBoundaryColor, mCircleBoundarySize, mMinPinFont, mMaxPinFont, mArePinsTemporary, mShowOnlyPinLabel);
 
         // Create the underlying bar.
         final float marginLeft = Math.max(mExpandedPinRadius, mCircleSize);
@@ -732,6 +736,15 @@ public class RangeBar extends View {
         invalidate();
     }
 
+    /**
+     * Set if the pins should only show a label and not a drawable.
+     *
+     * @param showOnlyPinLabel Boolean - true if pins should only be a label and not a drawable.
+     */
+    public void setShowOnlyPinLabel(boolean showOnlyPinLabel) {
+        mShowOnlyPinLabel = showOnlyPinLabel;
+        createPins();
+    }
 
     /**
      * Set the color of the ticks.
@@ -1173,6 +1186,7 @@ public class RangeBar extends View {
                     DEFAULT_MAX_PIN_FONT_SP * density);
 
             mIsRangeBar = ta.getBoolean(R.styleable.RangeBar_mrb_rangeBar, true);
+            mShowOnlyPinLabel = ta.getBoolean(R.styleable.RangeBar_mrb_showOnlyPinLabel, false);
         } finally {
             ta.recycle();
         }
@@ -1222,12 +1236,12 @@ public class RangeBar extends View {
         if (mIsRangeBar) {
             mLeftThumb = new PinView(ctx);
             mLeftThumb.init(ctx, yPos, expandedPinRadius, mPinColor, mTextColor, mCircleSize, mCircleColor, mCircleBoundaryColor, mCircleBoundarySize,
-                    mMinPinFont, mMaxPinFont, mArePinsTemporary);
+                    mMinPinFont, mMaxPinFont, mArePinsTemporary, mShowOnlyPinLabel);
         }
         mRightThumb = new PinView(ctx);
         mRightThumb
                 .init(ctx, yPos, expandedPinRadius, mPinColor, mTextColor, mCircleSize, mCircleColor, mCircleBoundaryColor, mCircleBoundarySize
-                        , mMinPinFont, mMaxPinFont, mArePinsTemporary);
+                        , mMinPinFont, mMaxPinFont, mArePinsTemporary, mShowOnlyPinLabel);
 
         float marginLeft = getMarginLeft();
         float barLength = getBarLength();
