@@ -24,6 +24,7 @@
         <attr name="mrb_connectingLineWeight" format="dimension"/>
         <attr name="mrb_connectingLineColor" format="reference|color"/>
         <attr name="mrb_pinRadius" format="dimension"/>
+        <attr name="mrb_connectingLineColors" format="reference"/>
     </declare-styleable>
 
 </resources>
