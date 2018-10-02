@@ -36,12 +36,12 @@ ext {
  * This is needed because we want to complie this as android library so that we can test it before publishing
  */
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     buildToolsVersion '27.0.3'
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName libraryVersion
     }

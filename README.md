@@ -46,8 +46,7 @@ mrb_rangeBarPaddingBottom | dimension
 mrb_rangeBar_rounded | boolean
 mrb_temporaryPins | boolean
 mrb_connectingLineWeight | dimension
-mrb_connectingLineColor | reference or color
-mrb_connectingLineColor | reference(array of hex colors)
+mrb_connectingLineColor | reference (array of hex colors)
 ```
 
 ### Pin Properties
@@ -84,32 +83,50 @@ Examples
 
 This is a rangebar with both a lower and upper value
 ```xml
-<com.appyvet.materialrangebar.RangeBar
+  <com.appyvet.materialrangebar.RangeBar
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/rangebar1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        app:mrb_pinMaxFont="10sp"
-        app:mrb_rangeBarPaddingBottom="12dp"
+        app:mrb_rangeBar="true"
+        app:mrb_pinMaxFont="15sp"
+        app:mrb_pinMinFont="12sp"
+        app:mrb_rangeBarPaddingBottom="20dp"
         app:mrb_selectorBoundaryColor="@color/accent"
         app:mrb_selectorBoundarySize="2dp"
-        app:mrb_pinTextColor="#ACD123"
-        app:mrb_selectorSize="10dp"
+        app:mrb_pinTextColor="@color/white"
         app:mrb_temporaryPins="true"
+        app:mrb_selectorSize="10dp"
         app:mrb_tickEnd="10"
         app:mrb_tickInterval="1"
-        app:mrb_tickStart="5"/>
+        app:mrb_tickStart="5"
+        app:mrb_pinRadius="14dp"
+        app:mrb_rangeBar_rounded="true"
+        app:mrb_connectingLineColors="@array/connecting_colors"
+        app:mrb_pinColor="#6c3f6a"/>
 ```
 
-This is a seekbar with only a single pin (note rangeBar=false)
+This is a seekbar with only a single pin (note mrb_rangeBar=false)
 ```xml
 <com.appyvet.materialrangebar.RangeBar
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/rangebar"
-        android:layout_width="match_parent"
-        android:layout_height="72dp"
-        app:mrb_rangeBar="false"/>
+            android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             app:mrb_rangeBar="false"
+             app:mrb_pinMaxFont="15sp"
+             app:mrb_pinMinFont="12sp"
+             app:mrb_rangeBarPaddingBottom="20dp"
+             app:mrb_selectorBoundaryColor="@color/accent"
+             app:mrb_selectorBoundarySize="2dp"
+             app:mrb_pinTextColor="@color/white"
+             app:mrb_temporaryPins="true"
+             app:mrb_selectorSize="10dp"
+             app:mrb_tickEnd="10"
+             app:mrb_tickInterval="1"
+             app:mrb_tickStart="5"
+             app:mrb_pinRadius="14dp"
+             app:mrb_rangeBar_rounded="true"
+             app:mrb_connectingLineColors="@array/connecting_colors"
+             app:mrb_pinColor="#6c3f6a"/>
 ```
 
 ## Adding a rangebar listener
