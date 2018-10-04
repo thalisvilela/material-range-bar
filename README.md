@@ -16,6 +16,7 @@ Developers can customize the following attributes (both via XML and programatica
 
 ### Change Log
 ```
+1.4.4 - Added List of colors for connecting line and fix pins invisibility issue.
 1.4.3 - Fixes an issue where you user was able to drag a thumb outside of the valid range of Rangebar.
 1.4.2 - Added option for rounding status Bar progress using mrb_rangeBar_rounded. Also Implemented seekbar to select the nearest tick, when clicked. Also Fixed Rangebar issue that was causing right pin to move left of left pin when both had same value.
 1.4.1 - Small Ui fixes
