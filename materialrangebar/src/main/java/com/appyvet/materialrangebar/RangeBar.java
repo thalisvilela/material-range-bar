@@ -201,6 +201,8 @@ public class RangeBar extends View {
 
     private boolean mArePinsTemporary = true;
 
+    private boolean mOnlyOnDrag = false;
+
     private PinTextFormatter mPinTextFormatter = new PinTextFormatter() {
         @Override
         public String getText(String value) {
@@ -259,6 +261,7 @@ public class RangeBar extends View {
         bundle.putFloat("PIN_PADDING", mPinPadding);
         bundle.putFloat("BAR_PADDING_BOTTOM", mBarPaddingBottom);
         bundle.putBoolean("IS_RANGE_BAR", mIsRangeBar);
+        bundle.putBoolean("IS_ONLY_ON_DRAG", mOnlyOnDrag);
         bundle.putBoolean("ARE_PINS_TEMPORARY", mArePinsTemporary);
         bundle.putInt("LEFT_INDEX", mLeftIndex);
         bundle.putInt("RIGHT_INDEX", mRightIndex);
@@ -299,6 +302,7 @@ public class RangeBar extends View {
             mPinPadding = bundle.getFloat("PIN_PADDING");
             mBarPaddingBottom = bundle.getFloat("BAR_PADDING_BOTTOM");
             mIsRangeBar = bundle.getBoolean("IS_RANGE_BAR");
+            mOnlyOnDrag = bundle.getBoolean("IS_ONLY_ON_DRAG");
             mArePinsTemporary = bundle.getBoolean("ARE_PINS_TEMPORARY");
 
             mLeftIndex = bundle.getInt("LEFT_INDEX");
@@ -483,6 +487,16 @@ public class RangeBar extends View {
     }
 
     // Public Methods //////////////////////////////////////////////////////////
+
+
+    /**
+     * Sets if the pins works only when drag it.
+     *
+     * @param onlyOnDrag boolean specifying if the onlyOnDrag is enabled
+     */
+    public void setOnlyOnDrag(boolean onlyOnDrag) {
+        mOnlyOnDrag = onlyOnDrag;
+    }
 
     /**
      * Sets a listener to receive notifications of changes to the RangeBar. This
@@ -1194,6 +1208,8 @@ public class RangeBar extends View {
                     DEFAULT_MAX_PIN_FONT_SP * density);
 
             mIsRangeBar = ta.getBoolean(R.styleable.RangeBar_mrb_rangeBar, true);
+
+            mOnlyOnDrag = ta.getBoolean(R.styleable.RangeBar_mrb_onlyOnDrag, false);
         } finally {
             ta.recycle();
         }
@@ -1391,7 +1407,7 @@ public class RangeBar extends View {
 
             releasePin(mRightThumb);
 
-        } else {
+        } else if (!mOnlyOnDrag) {
             float leftThumbXDistance = getLeftThumbXDistance(x);
             float rightThumbXDistance = getRightThumbXDistance(x);
             //move if is rangeBar and left index is lower of right one
