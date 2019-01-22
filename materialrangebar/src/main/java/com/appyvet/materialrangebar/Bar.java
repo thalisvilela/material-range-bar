@@ -16,6 +16,10 @@ package com.appyvet.materialrangebar;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.util.TypedValue;
+
+import java.util.List;
 
 /**
  * This class represents the underlying gray bar in the RangeBar (without the
@@ -29,6 +33,8 @@ public class Bar {
 
     private final Paint mTickPaint;
 
+    private Paint mLabelPaint;
+
     // Left-coordinate of the horizontal bar.
     private final float mLeftX;
 
@@ -41,6 +47,8 @@ public class Bar {
     private float mTickDistance;
 
     private final float mTickHeight;
+
+    private CharSequence[] mTickLabels;
 
     // Constructor /////////////////////////////////////////////////////////////
 
@@ -89,6 +97,52 @@ public class Bar {
         mTickPaint.setColor(tickColor);
         mTickPaint.setStrokeWidth(barWeight);
         mTickPaint.setAntiAlias(true);
+    }
+
+
+    /**
+     * Bar constructor
+     *
+     * @param ctx        the context
+     * @param x          the start x co-ordinate
+     * @param y          the y co-ordinate
+     * @param length     the length of the bar in px
+     * @param tickCount  the number of ticks on the bar
+     * @param tickHeight the height of each tick
+     * @param tickColor  the color of each tick
+     * @param barWeight  the weight of the bar
+     * @param barColor   the color of the bar
+     * @param isBarRounded if the bar has rounded edges or not
+     * @param tickLabelColor the color of each tick's label
+     * @param tickLabels the label each tick
+     */
+    public Bar(Context ctx,
+               float x,
+               float y,
+               float length,
+               int tickCount,
+               float tickHeight,
+               int tickColor,
+               float barWeight,
+               int barColor,
+               boolean isBarRounded,
+               int tickLabelColor,
+               CharSequence[] tickLabels) {
+        this(ctx, x, y, length, tickCount, tickHeight, tickColor, barWeight, barColor, isBarRounded);
+
+        if (tickLabels != null) {
+            //Set text size in px from dp
+            final int textSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12,
+                    ctx.getResources().getDisplayMetrics());
+
+            // Creates the paint and sets the Paint values
+            mLabelPaint = new Paint();
+            mLabelPaint.setColor(tickLabelColor);
+            mLabelPaint.setAntiAlias(true);
+            mLabelPaint.setTextSize(textSize);
+
+            mTickLabels = tickLabels;
+        }
     }
 
     // Package-Private Methods /////////////////////////////////////////////////
@@ -167,6 +221,14 @@ public class Bar {
         mTickDistance = barLength / mNumSegments;
     }
 
+    private String getTickLabel(int index) {
+        if (index >= mTickLabels.length) {
+            return "";
+        }
+
+        return mTickLabels[index].toString();
+    }
+
     // Private Methods /////////////////////////////////////////////////////////
 
     /**
@@ -175,15 +237,30 @@ public class Bar {
      * @param canvas Canvas to draw on; should be the Canvas passed into {#link
      *               View#onDraw()}
      */
-    public void drawTicks(Canvas canvas) {
-
+    public void drawTicks(Canvas canvas, float pinRadius) {
         // Loop through and draw each tick (except final tick).
-        for (int i = 0; i < mNumSegments; i++) {
+        int i = 0;
+        for (;i < mNumSegments; i++) {
             final float x = i * mTickDistance + mLeftX;
             canvas.drawCircle(x, mY, mTickHeight, mTickPaint);
+
+            if (mLabelPaint != null) {
+                drawTickLabel(canvas, getTickLabel(i), x, pinRadius);
+            }
         }
         // Draw final tick. We draw the final tick outside the loop to avoid any
         // rounding discrepancies.
         canvas.drawCircle(mRightX, mY, mTickHeight, mTickPaint);
+
+        // Draw final tick's label outside the loop
+        if (mLabelPaint != null) {
+            drawTickLabel(canvas, getTickLabel(i), mRightX, pinRadius);
+        }
+    }
+
+    private void drawTickLabel(Canvas canvas, final String label, float x, float pinRadius) {
+        Rect labelBounds = new Rect();
+        mLabelPaint.getTextBounds(label, 0, label.length(), labelBounds);
+        canvas.drawText(label, x - labelBounds.width()/2, mY + labelBounds.height() + pinRadius, mLabelPaint);
     }
 }
