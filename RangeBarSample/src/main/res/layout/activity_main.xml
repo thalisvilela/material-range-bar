@@ -29,7 +29,7 @@
         android:layout_marginEnd="40dp"
         app:mrb_pinMaxFont="15sp"
         app:mrb_pinMinFont="12sp"
-        app:mrb_rangeBarPaddingBottom="20dp"
+        app:mrb_rangeBarPaddingBottom="30dp"
         app:mrb_selectorBoundaryColor="@color/accent"
         app:mrb_selectorBoundarySize="2dp"
         app:mrb_pinTextColor="@color/white"
