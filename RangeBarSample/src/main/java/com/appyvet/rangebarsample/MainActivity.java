@@ -43,6 +43,10 @@ public class MainActivity extends Activity implements
 
     private int mSelectorBoundaryColor;
 
+    private int mTickLabelColor;
+
+    private int mTickLabelSelectedColor;
+
     // Saves the state upon rotating the screen/restarting the activity
     @Override
     protected void onSaveInstanceState(Bundle bundle) {
@@ -76,6 +80,10 @@ public class MainActivity extends Activity implements
         final TextView valueButton = (TextView) findViewById(R.id.setValue);
         final TextView rangeButton = (TextView) findViewById(R.id.enableRange);
         final TextView disabledButton = (TextView) findViewById(R.id.disable);
+        final TextView tickBottomLabelsButton = (TextView) findViewById(R.id.toggleTickBottomLabels);
+        final TextView tickTopLabelsButton = (TextView) findViewById(R.id.toggleTickTopLabels);
+        final TextView tickLabelColor = (TextView) findViewById(R.id.tickLabelColor);
+        final TextView tickLabelSelectedColor = (TextView) findViewById(R.id.tickLabelSelectColor);
 
         //Sets the buttons to bold.
 //        barColor.setTypeface(font, Typeface.BOLD);
@@ -313,6 +321,20 @@ public class MainActivity extends Activity implements
             }
         });
 
+        // Set tickLabelColor
+        tickLabelColor.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                initColorPicker(Component.TICK_LABEL_COLOR, mTickLabelColor, mTickLabelColor);
+            }
+        });
+
+        // Set tickLabelSelectedColor
+        tickLabelSelectedColor.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                initColorPicker(Component.TICK_LABEL_SELECTED_COLOR, mTickLabelSelectedColor, mTickLabelSelectedColor);
+            }
+        });
+
         // Sets connectingLineColor
         connectingLineColor.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -359,6 +381,38 @@ public class MainActivity extends Activity implements
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 rangebar.setBarRounded(isChecked);
+            }
+        });
+
+        tickTopLabelsButton.setOnClickListener(new View.OnClickListener() {
+            private CharSequence[] mLabels;
+
+            @Override
+            public void onClick(View v) {
+                final CharSequence[] labels = rangebar.getTickTopLabels();
+
+                if (labels != null) {
+                    mLabels = labels;
+                    rangebar.setTickTopLabels(null);
+                } else {
+                    rangebar.setTickTopLabels(mLabels);
+                }
+            }
+        });
+
+        tickBottomLabelsButton.setOnClickListener(new View.OnClickListener() {
+            private CharSequence[] mLabels;
+
+            @Override
+            public void onClick(View v) {
+                final CharSequence[] labels = rangebar.getTickBottomLabels();
+
+                if (labels != null) {
+                    mLabels = labels;
+                    rangebar.setTickBottomLabels(null);
+                } else {
+                    rangebar.setTickBottomLabels(mLabels);
+                }
             }
         });
 
@@ -435,6 +489,14 @@ public class MainActivity extends Activity implements
                 final TextView selectorBoundaryColorText = (TextView) findViewById(R.id.selectorBoundaryColor);
                 selectorBoundaryColorText.setText("Selector Boundary Color = " + hexColor);
                 selectorBoundaryColorText.setTextColor(newColor);
+                break;
+            case TICK_LABEL_COLOR:
+                mTickLabelColor = newColor;
+                rangebar.setTickLabelColor(newColor);
+                break;
+            case TICK_LABEL_SELECTED_COLOR:
+                mTickLabelSelectedColor = newColor;
+                rangebar.setTickLabelSelectedColor(newColor);
                 break;
         }
 

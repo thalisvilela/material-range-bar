@@ -10,6 +10,8 @@
     <string name="tickHeight">Tick Height = 24</string>
     <string name="barWeight">Bar Weight = 2</string>
     <string name="barColor">Bar Color = #CCCCCC</string>
+    <string name="tickLabelColor">Tick Label Color</string>
+    <string name="tickLabelSelectedColor">Tick Label Selected Color</string>
     <string name="connectingLineWeight">Connecting Line Weight = 4</string>
     <string name="connectingLineColor">Connecting Line Color = #3F51B5</string>
     <string name="thumbRadius">Pin Size = 30</string>
@@ -34,6 +36,8 @@
     <string name="color_swatch_description">Color</string>
     <string name="color_swatch_description_selected">Color selected</string>
     <string name="check_box_rounded_background">Rounded background</string>
+    <string name="top_tick_labels">Top tick labels</string>
+    <string name="bottom_tick_labels">Bottom tick labels</string>
     <string-array translatable="false" name="default_color_choice_values">
         <item>#33b5e5</item>
         <item>#aa66cc</item>
