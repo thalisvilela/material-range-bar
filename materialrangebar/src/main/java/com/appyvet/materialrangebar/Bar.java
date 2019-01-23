@@ -59,6 +59,8 @@ public class Bar {
 
     private String mTickDefaultLabel;
 
+    private float mTickLabelSize;
+
     // Constructor /////////////////////////////////////////////////////////////
 
 
@@ -141,7 +143,8 @@ public class Bar {
                int tickLabelSelectedColor,
                CharSequence[] tickTopLabels,
                CharSequence[] tickBottomLabels,
-               String tickDefaultLabel) {
+               String tickDefaultLabel,
+               float tickLabelSize) {
         this(ctx, x, y, length, tickCount, tickHeight, tickColor, barWeight, barColor, isBarRounded);
 
         if (tickTopLabels != null || tickBottomLabels != null) {
@@ -154,6 +157,7 @@ public class Bar {
             mTickTopLabels = tickTopLabels;
             mTickBottomLabels = tickBottomLabels;
             mTickDefaultLabel = tickDefaultLabel;
+            mTickLabelSize = tickLabelSize;
         }
     }
 
@@ -264,7 +268,7 @@ public class Bar {
         boolean paintLabel = false;
         if (mLabelPaint != null) {
             paintLabel = true;
-            final int textSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12,
+            final int textSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, mTickLabelSize,
                     mRes.getDisplayMetrics());
             mLabelPaint.setTextSize(textSize);
         }

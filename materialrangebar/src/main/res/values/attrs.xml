@@ -11,6 +11,7 @@
         <attr name="mrb_tickBottomLabels" format="reference"/>
         <attr name="mrb_tickTopLabels" format="reference"/>
         <attr name="mrb_tickDefaultLabel" format="reference|string"/>
+        <attr name="mrb_tickLabelSize" format="dimension"/>
         <attr name="mrb_barWeight" format="dimension"/>
         <attr name="mrb_rangeBarColor" format="reference|color"/>
         <attr name="mrb_selectorSize" format="dimension"/>

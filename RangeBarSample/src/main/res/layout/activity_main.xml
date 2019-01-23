@@ -40,6 +40,7 @@
         app:mrb_tickBottomLabels="@array/ticks_labels"
         app:mrb_tickTopLabels="@array/ticks_labels"
         app:mrb_tickDefaultLabel="label"
+        app:mrb_tickLabelSize="4sp"
         app:mrb_tickEnd="10"
         app:mrb_tickInterval="1"
         app:mrb_tickStart="5"

@@ -92,6 +92,8 @@ public class RangeBar extends View {
 
     private static final String DEFAULT_TICK_LABEL = "";
 
+    public static final float DEFAULT_TICK_LABEL_FONT_SP = 4;
+
     // Corresponds to material indigo 500.
     private static final int DEFAULT_PIN_COLOR = 0xff3f51b5;
 
@@ -141,6 +143,8 @@ public class RangeBar extends View {
     private int mActiveTickLabelColor;
 
     private int mActiveTickLabelSelectedColor;
+
+    private float mTickLabelSize = DEFAULT_TICK_LABEL_FONT_SP;
 
     private CharSequence[] mTickBottomLabels;
 
@@ -410,7 +414,7 @@ public class RangeBar extends View {
         final float barLength = w - (2 * marginLeft);
         mBar = new Bar(ctx, marginLeft, yPos, barLength, mTickCount, mTickHeight, mTickColor,
                 mBarWeight, mBarColor, mIsBarRounded, mTickLabelColor, mTickLabelSelectedColor,
-                mTickTopLabels, mTickBottomLabels, mTickDefaultLabel);
+                mTickTopLabels, mTickBottomLabels, mTickDefaultLabel, mTickLabelSize);
 
         // Initialize thumbs to the desired indices
         if (mIsRangeBar) {
@@ -1245,6 +1249,7 @@ public class RangeBar extends View {
             mTickBottomLabels = ta.getTextArray(R.styleable.RangeBar_mrb_tickBottomLabels);
             mTickTopLabels = ta.getTextArray(R.styleable.RangeBar_mrb_tickTopLabels);
             mTickDefaultLabel = ta.getString(R.styleable.RangeBar_mrb_tickDefaultLabel);
+            mTickDefaultLabel = (mTickDefaultLabel != null) ? mTickDefaultLabel : DEFAULT_TICK_LABEL;
 
             int mConnectingLineColor = ta.getColor(R.styleable.RangeBar_mrb_connectingLineColor,
                     DEFAULT_CONNECTING_LINE_COLOR);
@@ -1273,6 +1278,8 @@ public class RangeBar extends View {
                     DEFAULT_MIN_PIN_FONT_SP * density);
             mMaxPinFont = ta.getDimension(R.styleable.RangeBar_mrb_pinMaxFont,
                     DEFAULT_MAX_PIN_FONT_SP * density);
+            mTickLabelSize = ta.getDimension(R.styleable.RangeBar_mrb_tickLabelSize,
+                    DEFAULT_TICK_LABEL_FONT_SP * density);
 
             mIsRangeBar = ta.getBoolean(R.styleable.RangeBar_mrb_rangeBar, true);
         } finally {
@@ -1298,7 +1305,8 @@ public class RangeBar extends View {
                 mTickLabelSelectedColor,
                 mTickTopLabels,
                 mTickBottomLabels,
-                mTickDefaultLabel);
+                mTickDefaultLabel,
+                mTickLabelSize);
         invalidate();
     }
 
