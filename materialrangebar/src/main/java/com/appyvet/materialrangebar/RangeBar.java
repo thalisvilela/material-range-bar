@@ -896,6 +896,24 @@ public class RangeBar extends View {
     }
 
     /**
+     * Gets the tick top labels.
+     *
+     * @return the tick top labels
+     */
+    public CharSequence[] getTickTopLabels() {
+        return mTickTopLabels;
+    }
+
+    /**
+     * Gets the tick bottom labels.
+     *
+     * @return the tick bottom labels
+     */
+    public CharSequence[] getTickBottomLabels() {
+        return mTickBottomLabels;
+    }
+
+    /**
      * Sets the location of the pins according by the supplied index.
      * Numbered from 0 to mTickCount - 1 from the left.
      *
