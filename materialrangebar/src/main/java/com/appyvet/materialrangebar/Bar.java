@@ -14,12 +14,12 @@
 package com.appyvet.materialrangebar;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.support.annotation.Nullable;
 import android.util.TypedValue;
-
-import java.util.List;
 
 /**
  * This class represents the underlying gray bar in the RangeBar (without the
@@ -29,10 +29,11 @@ public class Bar {
 
     // Member Variables ////////////////////////////////////////////////////////
 
+    private final Resources mRes;
+
     private final Paint mBarPaint;
 
     private final Paint mTickPaint;
-
     private Paint mLabelPaint;
 
     // Left-coordinate of the horizontal bar.
@@ -48,7 +49,15 @@ public class Bar {
 
     private final float mTickHeight;
 
-    private CharSequence[] mTickLabels;
+    private int mTickLabelColor;
+
+    private int mTickLabelSelectedColor;
+
+    private CharSequence[] mTickTopLabels;
+
+    private CharSequence[] mTickBottomLabels;
+
+    private String mTickDefaultLabel;
 
     // Constructor /////////////////////////////////////////////////////////////
 
@@ -77,6 +86,7 @@ public class Bar {
                float barWeight,
                int barColor,
                boolean isBarRounded) {
+        mRes = ctx.getResources();
 
         mLeftX = x;
         mRightX = x + length;
@@ -114,7 +124,8 @@ public class Bar {
      * @param barColor   the color of the bar
      * @param isBarRounded if the bar has rounded edges or not
      * @param tickLabelColor the color of each tick's label
-     * @param tickLabels the label each tick
+     * @param tickTopLabels the top label of each tick
+     * @param tickBottomLabels the top label of each tick
      */
     public Bar(Context ctx,
                float x,
@@ -127,21 +138,22 @@ public class Bar {
                int barColor,
                boolean isBarRounded,
                int tickLabelColor,
-               CharSequence[] tickLabels) {
+               int tickLabelSelectedColor,
+               CharSequence[] tickTopLabels,
+               CharSequence[] tickBottomLabels,
+               String tickDefaultLabel) {
         this(ctx, x, y, length, tickCount, tickHeight, tickColor, barWeight, barColor, isBarRounded);
 
-        if (tickLabels != null) {
-            //Set text size in px from dp
-            final int textSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12,
-                    ctx.getResources().getDisplayMetrics());
-
+        if (tickTopLabels != null || tickBottomLabels != null) {
             // Creates the paint and sets the Paint values
             mLabelPaint = new Paint();
             mLabelPaint.setColor(tickLabelColor);
             mLabelPaint.setAntiAlias(true);
-            mLabelPaint.setTextSize(textSize);
-
-            mTickLabels = tickLabels;
+            mTickLabelColor = tickLabelColor;
+            mTickLabelSelectedColor = tickLabelSelectedColor;
+            mTickTopLabels = tickTopLabels;
+            mTickBottomLabels = tickBottomLabels;
+            mTickDefaultLabel = tickDefaultLabel;
         }
     }
 
@@ -154,7 +166,6 @@ public class Bar {
      *               View#onDraw()}
      */
     public void draw(Canvas canvas) {
-
         canvas.drawLine(mLeftX, mY, mRightX, mY, mBarPaint);
     }
 
@@ -221,12 +232,20 @@ public class Bar {
         mTickDistance = barLength / mNumSegments;
     }
 
-    private String getTickLabel(int index) {
-        if (index >= mTickLabels.length) {
-            return "";
+    private String getTickLabel(int index, CharSequence[] labels) {
+        if (index >= labels.length) {
+            return mTickDefaultLabel;
         }
 
-        return mTickLabels[index].toString();
+        return labels[index].toString();
+    }
+
+    private String getTickTopLabel(int index) {
+        return getTickLabel(index, mTickTopLabels);
+    }
+
+    private String getTickBottomLabel(int index) {
+        return getTickLabel(index, mTickBottomLabels);
     }
 
     // Private Methods /////////////////////////////////////////////////////////
@@ -237,15 +256,31 @@ public class Bar {
      * @param canvas Canvas to draw on; should be the Canvas passed into {#link
      *               View#onDraw()}
      */
-    public void drawTicks(Canvas canvas, float pinRadius) {
+    public void drawTicks(Canvas canvas, float pinRadius, PinView rightThumb) {
+        drawTicks(canvas, pinRadius, rightThumb, null);
+    }
+
+    public void drawTicks(Canvas canvas, float pinRadius, PinView rightThumb, @Nullable PinView leftThumb) {
+        boolean paintLabel = false;
+        if (mLabelPaint != null) {
+            paintLabel = true;
+            final int textSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12,
+                    mRes.getDisplayMetrics());
+            mLabelPaint.setTextSize(textSize);
+        }
+
         // Loop through and draw each tick (except final tick).
         int i = 0;
         for (;i < mNumSegments; i++) {
             final float x = i * mTickDistance + mLeftX;
             canvas.drawCircle(x, mY, mTickHeight, mTickPaint);
 
-            if (mLabelPaint != null) {
-                drawTickLabel(canvas, getTickLabel(i), x, pinRadius);
+            if (paintLabel) {
+                if (mTickTopLabels != null)
+                    drawTickLabel(canvas, getTickTopLabel(i), x, pinRadius, i == 0, false, true, rightThumb, leftThumb);
+
+                if (mTickBottomLabels != null)
+                    drawTickLabel(canvas, getTickBottomLabel(i), x, pinRadius, i == 0, false, false, rightThumb, leftThumb);
             }
         }
         // Draw final tick. We draw the final tick outside the loop to avoid any
@@ -253,14 +288,47 @@ public class Bar {
         canvas.drawCircle(mRightX, mY, mTickHeight, mTickPaint);
 
         // Draw final tick's label outside the loop
-        if (mLabelPaint != null) {
-            drawTickLabel(canvas, getTickLabel(i), mRightX, pinRadius);
+        if (paintLabel) {
+            if (mTickTopLabels != null)
+                drawTickLabel(canvas, getTickTopLabel(i), mRightX, pinRadius, false, true, true, rightThumb, leftThumb);
+
+            if (mTickBottomLabels != null)
+                drawTickLabel(canvas, getTickBottomLabel(i), mRightX, pinRadius, false, true, false, rightThumb, leftThumb);
         }
     }
 
-    private void drawTickLabel(Canvas canvas, final String label, float x, float pinRadius) {
+    private void drawTickLabel(Canvas canvas, final String label, float x, float pinRadius,
+        boolean first, boolean last, boolean isTop, PinView rightThumb, @Nullable PinView leftThumb) {
+
         Rect labelBounds = new Rect();
         mLabelPaint.getTextBounds(label, 0, label.length(), labelBounds);
-        canvas.drawText(label, x - labelBounds.width()/2, mY + labelBounds.height() + pinRadius, mLabelPaint);
+        float xPos = x - labelBounds.width()/2;
+
+        if (first) {
+            xPos += mTickHeight;
+        } else if (last) {
+            xPos -= mTickHeight;
+        }
+
+        boolean isSelected = rightThumb.isInTargetZone(x, mY);
+
+        if (!isSelected && leftThumb != null) {
+            isSelected = leftThumb.isInTargetZone(x, mY);
+        }
+
+        if (isSelected) {
+            mLabelPaint.setColor(mTickLabelSelectedColor);
+        } else {
+            mLabelPaint.setColor(mTickLabelColor);
+        }
+
+        float yPos;
+        if (isTop) {
+            yPos = mY - labelBounds.height() - pinRadius;
+        } else {
+            yPos = mY + labelBounds.height() + pinRadius;
+        }
+
+        canvas.drawText(label, xPos, yPos, mLabelPaint);
     }
 }

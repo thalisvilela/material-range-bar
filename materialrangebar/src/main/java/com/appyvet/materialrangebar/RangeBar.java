@@ -86,7 +86,11 @@ public class RangeBar extends View {
 
     private static final int DEFAULT_TICK_COLOR = Color.BLACK;
 
-    private static final int DEFAULT_TICK_LABEL_COLOR= Color.BLACK;
+    private static final int DEFAULT_TICK_LABEL_COLOR = Color.LTGRAY;
+
+    private static final int DEFAULT_TICK_LABEL_SELECTED_COLOR = Color.BLACK;
+
+    private static final String DEFAULT_TICK_LABEL = "";
 
     // Corresponds to material indigo 500.
     private static final int DEFAULT_PIN_COLOR = 0xff3f51b5;
@@ -132,9 +136,17 @@ public class RangeBar extends View {
 
     private int mTickLabelColor = DEFAULT_TICK_LABEL_COLOR;
 
+    private int mTickLabelSelectedColor = DEFAULT_TICK_LABEL_SELECTED_COLOR;
+
     private int mActiveTickLabelColor;
 
-    private CharSequence[] mTickLabels;
+    private int mActiveTickLabelSelectedColor;
+
+    private CharSequence[] mTickBottomLabels;
+
+    private CharSequence[] mTickTopLabels;
+
+    private String mTickDefaultLabel = DEFAULT_TICK_LABEL;
 
     private float mExpandedPinRadius = DEFAULT_EXPANDED_PIN_RADIUS_DP;
 
@@ -251,7 +263,10 @@ public class RangeBar extends View {
         bundle.putFloat("TICK_INTERVAL", mTickInterval);
         bundle.putInt("TICK_COLOR", mTickColor);
         bundle.putInt("TICK_LABEL_COLOR", mTickLabelColor);
-        bundle.putCharSequenceArray("TICK_LABELS", mTickLabels);
+        bundle.putInt("TICK_LABEL_SELECTED_COLOR", mTickLabelSelectedColor);
+        bundle.putCharSequenceArray("TICK_TOP_LABELS", mTickTopLabels);
+        bundle.putCharSequenceArray("TICK_BOTTOM_LABELS", mTickBottomLabels);
+        bundle.putString("TICK_DEFAULT_LABEL", mTickDefaultLabel);
 
         bundle.putFloat("TICK_HEIGHT_DP", mTickHeight);
         bundle.putFloat("BAR_WEIGHT", mBarWeight);
@@ -294,7 +309,10 @@ public class RangeBar extends View {
             mTickInterval = bundle.getFloat("TICK_INTERVAL");
             mTickColor = bundle.getInt("TICK_COLOR");
             mTickLabelColor = bundle.getInt("TICK_LABEL_COLOR");
-            mTickLabels = bundle.getCharSequenceArray("TICK_LABELS");
+            mTickLabelSelectedColor = bundle.getInt("TICK_LABEL_SELECTED_COLOR");
+            mTickTopLabels = bundle.getCharSequenceArray("TICK_TOP_LABELS");
+            mTickBottomLabels = bundle.getCharSequenceArray("TICK_BOTTOM_LABELS");
+            mTickDefaultLabel = bundle.getString("TICK_DEFAULT_LABEL");
             mTickHeight = bundle.getFloat("TICK_HEIGHT_DP");
             mBarWeight = bundle.getFloat("BAR_WEIGHT");
             mIsBarRounded = bundle.getBoolean("BAR_ROUNDED", false);
@@ -391,7 +409,8 @@ public class RangeBar extends View {
 
         final float barLength = w - (2 * marginLeft);
         mBar = new Bar(ctx, marginLeft, yPos, barLength, mTickCount, mTickHeight, mTickColor,
-                mBarWeight, mBarColor, mIsBarRounded, mTickLabelColor, mTickLabels);
+                mBarWeight, mBarColor, mIsBarRounded, mTickLabelColor, mTickLabelSelectedColor,
+                mTickTopLabels, mTickBottomLabels, mTickDefaultLabel);
 
         // Initialize thumbs to the desired indices
         if (mIsRangeBar) {
@@ -428,13 +447,13 @@ public class RangeBar extends View {
         if (mIsRangeBar) {
             mConnectingLine.draw(canvas, mLeftThumb, mRightThumb);
             if (drawTicks) {
-                mBar.drawTicks(canvas, mExpandedPinRadius);
+                mBar.drawTicks(canvas, mExpandedPinRadius, mRightThumb, mLeftThumb);
             }
             mLeftThumb.draw(canvas);
         } else {
             mConnectingLine.draw(canvas, getMarginLeft(), mRightThumb);
             if (drawTicks) {
-                mBar.drawTicks(canvas, mExpandedPinRadius);
+                mBar.drawTicks(canvas, mExpandedPinRadius, mRightThumb);
             }
         }
         mRightThumb.draw(canvas);
@@ -762,8 +781,18 @@ public class RangeBar extends View {
         createBar();
     }
 
-    public void setTickLabels(CharSequence[] tickLabels) {
-        mTickLabels = tickLabels;
+    public void setTickLabelSelectedColor(int tickLabelSelectedColor) {
+        mTickLabelSelectedColor = tickLabelSelectedColor;
+        createBar();
+    }
+
+    public void setTickTopLabels(CharSequence[] tickLabels) {
+        mTickTopLabels = tickLabels;
+        createBar();
+    }
+
+    public void setTickBottomLabels(CharSequence[] tickLabels) {
+        mTickBottomLabels = tickLabels;
         createBar();
     }
 
@@ -1072,12 +1101,14 @@ public class RangeBar extends View {
             mCircleColor = DEFAULT_BAR_COLOR;
             mTickColor = DEFAULT_BAR_COLOR;
             mTickLabelColor = DEFAULT_BAR_COLOR;
+            mTickLabelSelectedColor = DEFAULT_BAR_COLOR;
         } else {
             mBarColor = mActiveBarColor;
             setConnectingLineColor(mActiveConnectingLineColor);
             mCircleColor = mActiveCircleColor;
             mTickColor = mActiveTickColor;
             mTickLabelColor = mActiveTickLabelColor;
+            mTickLabelSelectedColor = mActiveTickLabelSelectedColor;
         }
 
         super.setEnabled(enabled);
@@ -1190,7 +1221,12 @@ public class RangeBar extends View {
 
             mTickLabelColor = ta.getColor(R.styleable.RangeBar_mrb_tickLabelColor, DEFAULT_TICK_LABEL_COLOR);
             mActiveTickLabelColor = mTickLabelColor;
-            mTickLabels = ta.getTextArray(R.styleable.RangeBar_mrb_tickLabels);
+            mTickLabelSelectedColor = ta.getColor(R.styleable.RangeBar_mrb_tickLabelSelectedColor, DEFAULT_TICK_LABEL_SELECTED_COLOR);
+            mActiveTickLabelSelectedColor = mTickLabelSelectedColor;
+
+            mTickBottomLabels = ta.getTextArray(R.styleable.RangeBar_mrb_tickBottomLabels);
+            mTickTopLabels = ta.getTextArray(R.styleable.RangeBar_mrb_tickTopLabels);
+            mTickDefaultLabel = ta.getString(R.styleable.RangeBar_mrb_tickDefaultLabel);
 
             int mConnectingLineColor = ta.getColor(R.styleable.RangeBar_mrb_connectingLineColor,
                     DEFAULT_CONNECTING_LINE_COLOR);
@@ -1241,7 +1277,10 @@ public class RangeBar extends View {
                 mBarColor,
                 mIsBarRounded,
                 mTickLabelColor,
-                mTickLabels);
+                mTickLabelSelectedColor,
+                mTickTopLabels,
+                mTickBottomLabels,
+                mTickDefaultLabel);
         invalidate();
     }
 
