@@ -25,6 +25,7 @@
         <attr name="mrb_connectingLineColor" format="reference|color"/>
         <attr name="mrb_pinRadius" format="dimension"/>
         <attr name="mrb_connectingLineColors" format="reference"/>
+        <attr name="mrb_onlyOnDrag" format="boolean"/>
     </declare-styleable>
 
 </resources>
