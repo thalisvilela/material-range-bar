@@ -274,8 +274,7 @@ public class Bar {
         }
 
         // Loop through and draw each tick (except final tick).
-        int i = 0;
-        for (;i < mNumSegments; i++) {
+        for (int i = 0; i < mNumSegments; i++) {
             final float x = i * mTickDistance + mLeftX;
             canvas.drawCircle(x, mY, mTickHeight, mTickPaint);
 
@@ -294,10 +293,10 @@ public class Bar {
         // Draw final tick's label outside the loop
         if (paintLabel) {
             if (mTickTopLabels != null)
-                drawTickLabel(canvas, getTickTopLabel(i), mRightX, pinRadius, false, true, true, rightThumb, leftThumb);
+                drawTickLabel(canvas, getTickTopLabel(mNumSegments), mRightX, pinRadius, false, true, true, rightThumb, leftThumb);
 
             if (mTickBottomLabels != null)
-                drawTickLabel(canvas, getTickBottomLabel(i), mRightX, pinRadius, false, true, false, rightThumb, leftThumb);
+                drawTickLabel(canvas, getTickBottomLabel(mNumSegments), mRightX, pinRadius, false, true, false, rightThumb, leftThumb);
         }
     }
 
