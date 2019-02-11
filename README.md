@@ -10,12 +10,13 @@ It is similar to an enhanced SeekBar widget, though it doesn't make use of the S
 
 Supported on API Level 12 and above for animations.
 
-![Img](https://github.com/oli107/material-range-bar/blob/master/Screenshots/pin%20expand.gif)
+![Img](https://github.com/oli107/material-range-bar/blob/master/Screenshots/materialrangebar_demo.gif)
 
 Developers can customize the following attributes (both via XML and programatically):
 
 ### Change Log
 ```
+1.4.5 - Added TOP and BOTTOM tick labels properties and drag only option. Also updated Gradle and screenshots.
 1.4.4 - Added List of colors for connecting line and fix pins invisibility issue.
 1.4.3 - Fixes an issue where you user was able to drag a thumb outside of the valid range of Rangebar.
 1.4.2 - Added option for rounding status Bar progress using mrb_rangeBar_rounded. Also Implemented seekbar to select the nearest tick, when clicked. Also Fixed Rangebar issue that was causing right pin to move left of left pin when both had same value.
@@ -38,6 +39,16 @@ mrb_tickHeight | dimension
 mrb_tickColor | color
 ```
 
+### Tick Label Properties
+```
+mrb_tickLabelColor | reference or color         // Unselected label color
+mrb_tickLabelSelectedColor | reference or color         // Selected Label Color
+mrb_tickTopLabels | reference (String array)
+mrb_tickBottomLabels | reference (String array)
+mrb_tickDefaultLabel | reference or string          // Used in cases when top/bottom labels are not equal to number of ticks
+mrb_tickLabelSize | dimension (sp)
+```
+
 ###  Bar Properties
 ```
 mrb_rangeBar | boolean
@@ -48,6 +59,7 @@ mrb_rangeBar_rounded | boolean
 mrb_temporaryPins | boolean
 mrb_connectingLineWeight | dimension
 mrb_connectingLineColor | reference (array of hex colors)
+mrb_onlyOnDrag | boolean
 ```
 
 ### Pin Properties
@@ -84,50 +96,70 @@ Examples
 
 This is a rangebar with both a lower and upper value
 ```xml
-  <com.appyvet.materialrangebar.RangeBar
+    <com.appyvet.materialrangebar.RangeBar
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/rangebar1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:mrb_rangeBar="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
         app:mrb_pinMaxFont="15sp"
         app:mrb_pinMinFont="12sp"
-        app:mrb_rangeBarPaddingBottom="20dp"
+        app:mrb_rangeBarPaddingBottom="30dp"
         app:mrb_selectorBoundaryColor="@color/accent"
         app:mrb_selectorBoundarySize="2dp"
         app:mrb_pinTextColor="@color/white"
         app:mrb_temporaryPins="true"
         app:mrb_selectorSize="10dp"
+        app:mrb_tickLabelColor="@color/indigo500"
+        app:mrb_tickLabelSelectedColor="@color/accent"
+        app:mrb_tickBottomLabels="@array/ticks_labels"
+        app:mrb_tickTopLabels="@array/ticks_labels"
+        app:mrb_tickDefaultLabel="label"
+        app:mrb_tickLabelSize="4sp"
         app:mrb_tickEnd="10"
         app:mrb_tickInterval="1"
         app:mrb_tickStart="5"
+        app:mrb_tickHeight="4dp"
         app:mrb_pinRadius="14dp"
         app:mrb_rangeBar_rounded="true"
         app:mrb_connectingLineColors="@array/connecting_colors"
+        app:mrb_rangeBar="true"
         app:mrb_pinColor="#6c3f6a"/>
 ```
 
 This is a seekbar with only a single pin (note mrb_rangeBar=false)
 ```xml
-<com.appyvet.materialrangebar.RangeBar
-            android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             app:mrb_rangeBar="false"
-             app:mrb_pinMaxFont="15sp"
-             app:mrb_pinMinFont="12sp"
-             app:mrb_rangeBarPaddingBottom="20dp"
-             app:mrb_selectorBoundaryColor="@color/accent"
-             app:mrb_selectorBoundarySize="2dp"
-             app:mrb_pinTextColor="@color/white"
-             app:mrb_temporaryPins="true"
-             app:mrb_selectorSize="10dp"
-             app:mrb_tickEnd="10"
-             app:mrb_tickInterval="1"
-             app:mrb_tickStart="5"
-             app:mrb_pinRadius="14dp"
-             app:mrb_rangeBar_rounded="true"
-             app:mrb_connectingLineColors="@array/connecting_colors"
-             app:mrb_pinColor="#6c3f6a"/>
+    <com.appyvet.materialrangebar.RangeBar
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/rangebar1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        app:mrb_pinMaxFont="15sp"
+        app:mrb_pinMinFont="12sp"
+        app:mrb_rangeBarPaddingBottom="30dp"
+        app:mrb_selectorBoundaryColor="@color/accent"
+        app:mrb_selectorBoundarySize="2dp"
+        app:mrb_pinTextColor="@color/white"
+        app:mrb_temporaryPins="true"
+        app:mrb_selectorSize="10dp"
+        app:mrb_tickLabelColor="@color/indigo500"
+        app:mrb_tickLabelSelectedColor="@color/accent"
+        app:mrb_tickBottomLabels="@array/ticks_labels"
+        app:mrb_tickTopLabels="@array/ticks_labels"
+        app:mrb_tickDefaultLabel="label"
+        app:mrb_tickLabelSize="4sp"
+        app:mrb_tickEnd="10"
+        app:mrb_tickInterval="1"
+        app:mrb_tickStart="5"
+        app:mrb_tickHeight="4dp"
+        app:mrb_pinRadius="14dp"
+        app:mrb_rangeBar_rounded="true"
+        app:mrb_connectingLineColors="@array/connecting_colors"
+        app:mrb_rangeBar="false"
+        app:mrb_pinColor="#6c3f6a"/>
 ```
 
 ## Adding a rangebar listener
@@ -182,7 +214,7 @@ allprojects {
 
 ```groovy
 dependencies {
-    implementation 'com.appyvet:materialrangebar:1.4.4'
+    implementation 'com.appyvet:materialrangebar:1.4.5'
 }
 ```
 
@@ -190,7 +222,7 @@ dependencies {
 **if you are already using android support library inside your project and run into multiple version issues related to android support library then modify the gradle path like this**
 ```groovy
 dependencies {
-    compile ('com.appyvet:materialrangebar:1.4.4') {
+    compile ('com.appyvet:materialrangebar:1.4.5') {
             exclude module: 'support-compat'
     }
 }
@@ -198,8 +230,9 @@ dependencies {
 
 Contribution
 =======
-You are always welcome to contribute and help us mantain the library. 
-
+We don't have enough time to constantly answer the issues and handle updates. So we need all the help we can get.
+You are always welcome to contribute and help us maintain the library.
+For Moderator Access create an issue on Github and tag oli107.
 
 License
 =======
