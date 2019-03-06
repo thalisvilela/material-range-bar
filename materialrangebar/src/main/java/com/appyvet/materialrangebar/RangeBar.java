@@ -1483,6 +1483,9 @@ public class RangeBar extends View {
                 pressPin(mRightThumb);
             }
         }
+
+        if (mListener != null)
+            mListener.onTouchStarted(this);
     }
 
     /**
@@ -1530,6 +1533,8 @@ public class RangeBar extends View {
                 }
             }
         }
+        if (mListener != null)
+            mListener.onTouchEnded(this);
     }
 
     /**
@@ -1699,6 +1704,10 @@ public class RangeBar extends View {
 
         void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex,
                                    int rightPinIndex, String leftPinValue, String rightPinValue);
+
+        void onTouchStarted(RangeBar rangeBar);
+
+        void onTouchEnded(RangeBar rangeBar);
     }
 
     public interface PinTextFormatter {
