@@ -24,6 +24,8 @@
         <attr name="mrb_pinMaxFont" format="dimension"/>
         <attr name="mrb_rangeBarPaddingBottom" format="dimension"/>
         <attr name="mrb_selectorColor" format="reference|color"/>
+        <attr name="mrb_selectorColorLeft" format="reference|color"/>
+        <attr name="mrb_selectorColorRight" format="reference|color"/>
         <attr name="mrb_rangeBar" format="boolean"/>
         <attr name="mrb_temporaryPins" format="boolean"/>
         <attr name="mrb_rangeBar_rounded" format="boolean"/>
