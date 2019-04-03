@@ -809,6 +809,29 @@ public class RangeBar extends View {
         createBar();
     }
 
+    /**
+     * Set the color of the ticks.
+     * @param tickColors List of Integers specifying the color of the ticks.
+     */
+    public void setTickColors(ArrayList<Integer> tickColors) {
+
+        this.mTickColors = tickColors;
+        createBar();
+    }
+
+    /**
+     * Set the color of the ticks.
+     *
+     * @param color Integer specifying the color of the ticks.
+     */
+    public void setTickColors(int color) {
+        for (int i=0; i<mTickColors.size(); i++) {
+            mTickColors.set(i, color);
+        }
+
+        createBar();
+    }
+
     public void setTickLabelColor(int tickLabelColor) {
         mTickLabelColor = tickLabelColor;
         createBar();
@@ -902,6 +925,40 @@ public class RangeBar extends View {
     }
 
     /**
+     * Sets left selector circle color
+     * @param mCircleColorLeft
+     */
+    public void setSelectorColorStart(int mCircleColorLeft) {
+        this.mCircleColorLeft = mCircleColorLeft;
+        createPins();
+    }
+
+    /**
+     * Sets Right selector circle color
+     * @param mCircleColorRight
+     */
+    public void setSelectorColorEnd(Integer mCircleColorRight) {
+        this.mCircleColorRight = mCircleColorRight;
+        createPins();
+    }
+
+    /**
+     * Gets left selector color
+     * @return
+     */
+    public int getSelectorColorStart() {
+        return mCircleColorLeft;
+    }
+
+    /**
+     * Gets right selector color
+     * @return
+     */
+    public int getSelectorColorEnd() {
+        return mCircleColorRight;
+    }
+
+    /**
      * Gets the start tick.
      *
      * @return the start tick.
@@ -945,6 +1002,15 @@ public class RangeBar extends View {
     public CharSequence[] getTickBottomLabels() {
         return mTickBottomLabels;
     }
+
+    /**
+     * Gets the tick colors.
+     * @return List of colors
+     */
+    public ArrayList<Integer> getTickColors() {
+        return mTickColors;
+    }
+
 
     /**
      * Sets the location of the pins according by the supplied index.
@@ -1153,6 +1219,7 @@ public class RangeBar extends View {
             mCircleColorLeft = null;
             mCircleColorRight = null;
             mTickColor = DEFAULT_BAR_COLOR;
+            setTickColors(DEFAULT_BAR_COLOR);
             mTickLabelColor = DEFAULT_BAR_COLOR;
             mTickLabelSelectedColor = DEFAULT_BAR_COLOR;
         } else {
@@ -1162,6 +1229,7 @@ public class RangeBar extends View {
             mCircleColorLeft = mActiveCircleColorLeft;
             mCircleColorRight = mActiveCircleColorRight;
             mTickColor = mActiveTickColor;
+            //TODO: SHEPPARD FIGURE OUT WHAT TO DO HERE
             mTickLabelColor = mActiveTickLabelColor;
             mTickLabelSelectedColor = mActiveTickLabelSelectedColor;
         }
@@ -1177,34 +1245,7 @@ public class RangeBar extends View {
         this.mPinTextFormatter = pinTextFormatter;
     }
 
-    public int getSelectorColorStart() {
-        return mCircleColorLeft;
-    }
-
-    public void setSelectorColorStart(int mCircleColorLeft) {
-        this.mCircleColorLeft = mCircleColorLeft;
-        createPins();
-    }
-
-    public Integer getSelectorColorEnd() {
-        return mCircleColorRight;
-    }
-
-    public void setSelectorColorEnd(Integer mCircleColorRight) {
-        this.mCircleColorRight = mCircleColorRight;
-        createPins();
-    }
-
-
-    public ArrayList<Integer> getmTickColors() {
-        return mTickColors;
-    }
-
-    public void setmTickColors(ArrayList<Integer> mTickColors) {
-        this.mTickColors = mTickColors;
-    }
-
-    // Private Methods /////////////////////////////////////////////////////////
+      // Private Methods /////////////////////////////////////////////////////////
 
     /**
      * Does all the functions of the constructor for RangeBar. Called by both
