@@ -421,13 +421,11 @@ public class RangeBar extends View {
         if (mIsRangeBar) {
             mLeftThumb = new PinView(ctx);
             mLeftThumb.setFormatter(mFormatter);
-            mLeftThumb.init(ctx, yPos, expandedPinRadius, mPinColor, mTextColor, mCircleSize,
-                    getLeftThumbCircleColor(), mCircleBoundaryColor, mCircleBoundarySize, mMinPinFont, mMaxPinFont, mArePinsTemporary);
+            mLeftThumb.init(ctx, yPos, expandedPinRadius, mPinColor, mTextColor, mCircleSize, mCircleColorLeft, mCircleBoundaryColor, mCircleBoundarySize, mMinPinFont, mMaxPinFont, mArePinsTemporary);
         }
         mRightThumb = new PinView(ctx);
         mRightThumb.setFormatter(mFormatter);
-        mRightThumb.init(ctx, yPos, expandedPinRadius, mPinColor, mTextColor, mCircleSize,
-                getRightThumbCircleColor(), mCircleBoundaryColor, mCircleBoundarySize, mMinPinFont, mMaxPinFont, mArePinsTemporary);
+        mRightThumb.init(ctx, yPos, expandedPinRadius, mPinColor, mTextColor, mCircleSize, mCircleColorRight, mCircleBoundaryColor, mCircleBoundarySize, mMinPinFont, mMaxPinFont, mArePinsTemporary);
 
         // Create the underlying bar.
         final float marginLeft = Math.max(mExpandedPinRadius, mCircleSize);
@@ -1409,12 +1407,12 @@ public class RangeBar extends View {
 
         if (mIsRangeBar) {
             mLeftThumb = new PinView(ctx);
-            mLeftThumb.init(ctx, yPos, expandedPinRadius, mPinColor, mTextColor, mCircleSize, getLeftThumbCircleColor(), mCircleBoundaryColor, mCircleBoundarySize,
+            mLeftThumb.init(ctx, yPos, expandedPinRadius, mPinColor, mTextColor, mCircleSize, mCircleColorLeft, mCircleBoundaryColor, mCircleBoundarySize,
                     mMinPinFont, mMaxPinFont, mArePinsTemporary);
         }
         mRightThumb = new PinView(ctx);
         mRightThumb
-                .init(ctx, yPos, expandedPinRadius, mPinColor, mTextColor, mCircleSize, getRightThumbCircleColor(), mCircleBoundaryColor, mCircleBoundarySize
+                .init(ctx, yPos, expandedPinRadius, mPinColor, mTextColor, mCircleSize, mCircleColorRight, mCircleBoundaryColor, mCircleBoundarySize
                         , mMinPinFont, mMaxPinFont, mArePinsTemporary);
 
         float marginLeft = getMarginLeft();
@@ -1771,23 +1769,6 @@ public class RangeBar extends View {
     public interface OnRangeBarTextListener {
 
         String getPinValue(RangeBar rangeBar, int tickIndex);
-    }
-
-
-    private int getLeftThumbCircleColor() {
-        if (null == mCircleColorLeft) {
-            return mCircleColor;
-        }
-
-        return mCircleColorLeft;
-    }
-
-    private int getRightThumbCircleColor() {
-        if (null == mCircleColorRight) {
-            return mCircleColor;
-        }
-
-        return mCircleColorRight;
     }
 
     private void setTickColors(ArrayList<Integer> mTickColors) {
