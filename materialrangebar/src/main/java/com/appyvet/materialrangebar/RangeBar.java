@@ -136,7 +136,6 @@ public class RangeBar extends View {
 
     private int mTickColor = DEFAULT_TICK_COLOR;
 
-    //TODO: SHEPPAR FINISH
     private ArrayList<Integer> mTickColors = new ArrayList<>();
 
     private int mTickLabelColor = DEFAULT_TICK_LABEL_COLOR;
@@ -432,7 +431,7 @@ public class RangeBar extends View {
 
         final float barLength = w - (2 * marginLeft);
 
-        mBar = new Bar(ctx, marginLeft, yPos, barLength, mTickCount, mTickHeight, mTickColor,
+        mBar = new Bar(ctx, marginLeft, yPos, barLength, mTickCount, mTickHeight, mTickColors,
                 mBarWeight, mBarColor, mIsBarRounded, mTickLabelColor, mTickLabelSelectedColor,
                 mTickTopLabels, mTickBottomLabels, mTickDefaultLabel, mTickLabelSize);
 
@@ -1163,7 +1162,6 @@ public class RangeBar extends View {
             mCircleColorLeft = mActiveCircleColorLeft;
             mCircleColorRight = mActiveCircleColorRight;
             mTickColor = mActiveTickColor;
-            setTickColors(mTickColors);
             mTickLabelColor = mActiveTickLabelColor;
             mTickLabelSelectedColor = mActiveTickLabelSelectedColor;
         }
@@ -1309,6 +1307,7 @@ public class RangeBar extends View {
             mActiveCircleColorLeft = mCircleColorLeft;
             mActiveCircleColorRight = mCircleColorRight;
             mTickColor = ta.getColor(R.styleable.RangeBar_mrb_tickColor, DEFAULT_TICK_COLOR);
+            mTickColors = getColors(ta.getTextArray(R.styleable.RangeBar_mrb_tickColors), mTickColor);
             mActiveTickColor = mTickColor;
 
             mTickLabelColor = ta.getColor(R.styleable.RangeBar_mrb_tickLabelColor, DEFAULT_TICK_LABEL_COLOR);
@@ -1325,19 +1324,7 @@ public class RangeBar extends View {
                     DEFAULT_CONNECTING_LINE_COLOR);
             mActiveConnectingLineColor = mConnectingLineColor;
 
-            CharSequence[] colors = ta.getTextArray(R.styleable.RangeBar_mrb_connectingLineColors);
-            if (colors != null && colors.length > 0) {
-                for (CharSequence colorHex : colors) {
-                    String hexString = colorHex.toString();
-
-                    if(hexString.length() == 4)
-                        hexString += "000";
-
-                    mConnectingLineColors.add(Color.parseColor(hexString));
-                }
-            } else {
-                mConnectingLineColors.add(mConnectingLineColor);
-            }
+            mConnectingLineColors = getColors(ta.getTextArray(R.styleable.RangeBar_mrb_connectingLineColors), mConnectingLineColor);
 
             mIsRangeBar = ta.getBoolean(R.styleable.RangeBar_mrb_rangeBar, true);
             mArePinsTemporary = ta.getBoolean(R.styleable.RangeBar_mrb_temporaryPins, true);
@@ -1369,7 +1356,7 @@ public class RangeBar extends View {
                 getBarLength(),
                 mTickCount,
                 mTickHeight,
-                mTickColor,
+                mTickColors,
                 mBarWeight,
                 mBarColor,
                 mIsBarRounded,
@@ -1726,6 +1713,26 @@ public class RangeBar extends View {
         return mPinTextFormatter.getText(xValue);
     }
 
+
+    private ArrayList<Integer> getColors(CharSequence[] colors, int defaultColor) {
+        ArrayList<Integer> colorList = new ArrayList<>();
+
+        if (colors != null && colors.length > 0) {
+            for (CharSequence colorHex : colors) {
+                String hexString = colorHex.toString();
+
+                if(hexString.length() == 4)
+                    hexString += "000";
+
+                colorList.add(Color.parseColor(hexString));
+            }
+        } else {
+            colorList.add(defaultColor);
+        }
+
+        return colorList;
+    }
+
     /**
      * Moves the thumb to the given x-coordinate.
      *
@@ -1769,15 +1776,5 @@ public class RangeBar extends View {
     public interface OnRangeBarTextListener {
 
         String getPinValue(RangeBar rangeBar, int tickIndex);
-    }
-
-    private void setTickColors(ArrayList<Integer> mTickColors) {
-    }
-
-    public void setTickColors(int tickColor) {
-
-        mTickColors.clear();
-        mTickColors.add(tickColor);
-        createBar();
     }
 }
