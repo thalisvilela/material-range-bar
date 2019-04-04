@@ -811,6 +811,7 @@ public class RangeBar extends View {
 
     /**
      * Set the color of the ticks.
+     *
      * @param tickColors List of Integers specifying the color of the ticks.
      */
     public void setTickColors(ArrayList<Integer> tickColors) {
@@ -825,7 +826,7 @@ public class RangeBar extends View {
      * @param color Integer specifying the color of the ticks.
      */
     public void setTickColors(int color) {
-        for (int i=0; i<mTickColors.size(); i++) {
+        for (int i = 0; i < mTickColors.size(); i++) {
             mTickColors.set(i, color);
         }
 
@@ -926,35 +927,39 @@ public class RangeBar extends View {
 
     /**
      * Sets left selector circle color
+     *
      * @param mCircleColorLeft
      */
-    public void setSelectorColorStart(int mCircleColorLeft) {
+    public void setSelectorColorLeft(int mCircleColorLeft) {
         this.mCircleColorLeft = mCircleColorLeft;
         createPins();
     }
 
     /**
      * Sets Right selector circle color
+     *
      * @param mCircleColorRight
      */
-    public void setSelectorColorEnd(Integer mCircleColorRight) {
+    public void setSelectorColorRight(Integer mCircleColorRight) {
         this.mCircleColorRight = mCircleColorRight;
         createPins();
     }
 
     /**
      * Gets left selector color
+     *
      * @return
      */
-    public int getSelectorColorStart() {
+    public int getSelectorColorLeft() {
         return mCircleColorLeft;
     }
 
     /**
      * Gets right selector color
+     *
      * @return
      */
-    public int getSelectorColorEnd() {
+    public int getSelectorColorRight() {
         return mCircleColorRight;
     }
 
@@ -1005,12 +1010,18 @@ public class RangeBar extends View {
 
     /**
      * Gets the tick colors.
+     *
      * @return List of colors
      */
     public ArrayList<Integer> getTickColors() {
         return mTickColors;
     }
 
+
+    public int getTickColors(int index) {
+
+        return mTickColors.get(index).intValue();
+    }
 
     /**
      * Sets the location of the pins according by the supplied index.
@@ -1229,7 +1240,7 @@ public class RangeBar extends View {
             mCircleColorLeft = mActiveCircleColorLeft;
             mCircleColorRight = mActiveCircleColorRight;
             mTickColor = mActiveTickColor;
-            //TODO: SHEPPARD FIGURE OUT WHAT TO DO HERE
+            setTickColors(mActiveTickColor);
             mTickLabelColor = mActiveTickLabelColor;
             mTickLabelSelectedColor = mActiveTickLabelSelectedColor;
         }
@@ -1245,7 +1256,7 @@ public class RangeBar extends View {
         this.mPinTextFormatter = pinTextFormatter;
     }
 
-      // Private Methods /////////////////////////////////////////////////////////
+    // Private Methods /////////////////////////////////////////////////////////
 
     /**
      * Does all the functions of the constructor for RangeBar. Called by both
@@ -1342,7 +1353,6 @@ public class RangeBar extends View {
                     mCircleColor);
             mCircleBoundaryColor = ta.getColor(R.styleable.RangeBar_mrb_selectorBoundaryColor,
                     DEFAULT_CONNECTING_LINE_COLOR);
-
 
             mActiveCircleColor = mCircleColor;
             mActiveCircleColorLeft = mCircleColorLeft;
@@ -1727,6 +1737,10 @@ public class RangeBar extends View {
             invalidate();
         }
 
+        if (mListener != null) {
+            mListener.onReleaseListener(this, mLeftIndex, mRightIndex, getPinValue(mLeftIndex), getPinValue(mRightIndex));
+        }
+
         thumb.release();
     }
 
@@ -1762,7 +1776,7 @@ public class RangeBar extends View {
             for (CharSequence colorHex : colors) {
                 String hexString = colorHex.toString();
 
-                if(hexString.length() == 4)
+                if (hexString.length() == 4)
                     hexString += "000";
 
                 colorList.add(Color.parseColor(hexString));
@@ -1803,6 +1817,9 @@ public class RangeBar extends View {
 
         void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex,
                                    int rightPinIndex, String leftPinValue, String rightPinValue);
+
+        void onReleaseListener(RangeBar rangeBar, int leftPinIndex,
+                               int rightPinIndex, String leftPinValue, String rightPinValue);
     }
 
     public interface PinTextFormatter {

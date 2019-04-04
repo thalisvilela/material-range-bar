@@ -119,6 +119,14 @@ public class MainActivity extends Activity implements
                                               int rightPinIndex, String leftPinValue, String rightPinValue) {
                 leftIndexValue.setText("" + leftPinIndex);
                 rightIndexValue.setText("" + rightPinIndex);
+
+                
+            }
+
+            @Override
+            public void onReleaseListener(RangeBar rangeBar, int leftPinIndex,
+                                          int rightPinIndex, String leftPinValue, String rightPinValue) {
+
             }
 
         });
