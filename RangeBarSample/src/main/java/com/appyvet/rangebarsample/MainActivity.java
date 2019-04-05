@@ -124,11 +124,14 @@ public class MainActivity extends Activity implements
             }
 
             @Override
-            public void onReleaseListener(RangeBar rangeBar, int leftPinIndex,
-                                          int rightPinIndex, String leftPinValue, String rightPinValue) {
-
+            public void onTouchEnded(RangeBar rangeBar) {
+                Log.d("RangeBar", "Touch ended");
             }
 
+            @Override
+            public void onTouchStarted(RangeBar rangeBar) {
+                Log.d("RangeBar", "Touch started");
+            }
         });
 
         // Sets the indices themselves upon input from the user
