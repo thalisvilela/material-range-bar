@@ -1037,6 +1037,9 @@ public class RangeBar extends View {
                         getPinValue(mLeftIndex), getPinValue(mRightIndex));
             }
         }
+
+        if (mListener != null)
+            mListener.onTouchEnded(this);
         invalidate();
         requestLayout();
     }
