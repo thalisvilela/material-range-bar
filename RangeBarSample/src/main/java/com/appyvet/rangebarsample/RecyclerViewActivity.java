@@ -21,7 +21,9 @@ public class RecyclerViewActivity extends Activity {
         setContentView(R.layout.activity_recyclerview);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new Adapter());
+        Adapter adapter = new Adapter();
+        adapter.setHasStableIds(true);
+        recyclerView.setAdapter(adapter);
     }
 
     public static class Adapter extends RecyclerView.Adapter<VH> {
@@ -34,13 +36,23 @@ public class RecyclerViewActivity extends Activity {
         }
 
         @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return position;
+        }
+
+        @Override
         public void onBindViewHolder(@NonNull VH vh, int i) {
 
         }
 
         @Override
         public int getItemCount() {
-            return 100;
+            return 50;
         }
     }
 
