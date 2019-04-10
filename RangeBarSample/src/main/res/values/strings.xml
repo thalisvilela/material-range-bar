@@ -4,6 +4,7 @@
     <string name="app_name">RangeBar Sample</string>
     <string name="action_settings">Settings</string>
     <string name="title">MaterialRangeBar</string>
+    <string name="title_recyclerview">Rangebar RecyclerView Sample</string>
     <string name="tickStart">Tick Start = 5</string>
     <string name="tickEnd">Tick End = 10</string>
     <string name="tickInterval">Tick Interval = 1</string>

@@ -6,19 +6,24 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 
 public class RecyclerViewActivity extends Activity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Removes title bar and sets content view
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_recyclerview);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         Adapter adapter = new Adapter();
@@ -56,9 +61,9 @@ public class RecyclerViewActivity extends Activity {
         }
     }
 
-    public static class VH extends RecyclerView.ViewHolder {
+    static class VH extends RecyclerView.ViewHolder {
 
-        public VH(@NonNull View itemView) {
+        VH(@NonNull View itemView) {
             super(itemView);
         }
     }

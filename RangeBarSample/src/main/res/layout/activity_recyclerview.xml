@@ -1,23 +1,30 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/title"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="130dp"
-        android:background="@color/indigo500"
-        android:gravity="center"
-        android:text="@string/title"
-        android:textColor="@color/white"
-        android:textSize="40sp" />
+        android:layout_height="wrap_content">
 
-    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/indigo500"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"
+            app:navigationIcon="@drawable/ic_back"
+            app:title="@string/title_recyclerview" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/recyclerview_item" />
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
