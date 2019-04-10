@@ -38,6 +38,8 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -226,6 +228,10 @@ public class RangeBar extends View {
     private boolean mArePinsTemporary = true;
 
     private boolean mOnlyOnDrag = false;
+
+    private boolean mDragging = false;
+
+    private boolean mIsInScrollingContainer = false;
 
     private PinTextFormatter mPinTextFormatter = new PinTextFormatter() {
         @Override
@@ -447,6 +453,13 @@ public class RangeBar extends View {
     }
 
     @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        // Cache this value since it only changes if the ViewParent changes
+        mIsInScrollingContainer = isInScrollingContainer();
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
 
         super.onDraw(canvas);
@@ -481,25 +494,32 @@ public class RangeBar extends View {
             case MotionEvent.ACTION_DOWN:
                 mDiffX = 0;
                 mDiffY = 0;
-
                 mLastX = event.getX();
                 mLastY = event.getY();
-                onActionDown(event.getX(), event.getY());
+                // We don't want to change to tick value yet if we're inside a scrolling container.
+                // In this case, the user may be trying to scroll the parent.
+                if (!mIsInScrollingContainer) {
+                    onActionDown(event.getX(), event.getY());
+                }
                 return true;
 
             case MotionEvent.ACTION_UP:
-                this.getParent().requestDisallowInterceptTouchEvent(false);
-                onActionUp(event.getX(), event.getY());
+                // Just release the dragging if we were previously dragging
+                // or if it was a click (last touch event coordinates are the same)
+                if (mDragging || (event.getX() == mLastX && event.getY() == mLastY)) {
+                    this.getParent().requestDisallowInterceptTouchEvent(false);
+                    onActionUp(event.getX(), event.getY());
+                }
                 return true;
 
             case MotionEvent.ACTION_CANCEL:
-                this.getParent().requestDisallowInterceptTouchEvent(false);
-                onActionUp(event.getX(), event.getY());
+                if (mDragging || (event.getX() == mLastX && event.getY() == mLastY)) {
+                    this.getParent().requestDisallowInterceptTouchEvent(false);
+                    onActionUp(event.getX(), event.getY());
+                }
                 return true;
 
             case MotionEvent.ACTION_MOVE:
-                onActionMove(event.getX());
-                this.getParent().requestDisallowInterceptTouchEvent(true);
                 final float curX = event.getX();
                 final float curY = event.getY();
                 mDiffX += Math.abs(curX - mLastX);
@@ -507,12 +527,26 @@ public class RangeBar extends View {
                 mLastX = curX;
                 mLastY = curY;
 
-                if (mDiffX < mDiffY) {
-                    //vertical touch
-                    getParent().requestDisallowInterceptTouchEvent(false);
-                    return false;
+                if (!mDragging) {
+                    if (mDiffX > mDiffY) {
+                        onActionDown(event.getX(), event.getY());
+                        return true;
+                    } else {
+                        return false;
+                    }
                 } else {
-                    //horizontal touch (do nothing as it is needed for RangeBar)
+                    onActionMove(event.getX());
+                    this.getParent().requestDisallowInterceptTouchEvent(true);
+                    if (mDiffX < mDiffY) {
+                        //vertical touch
+                        // Don't let scrolling parents get this touch event
+                        if (!mIsInScrollingContainer) {
+                            getParent().requestDisallowInterceptTouchEvent(false);
+                        }
+                        return false;
+                    } else {
+                        //horizontal touch (do nothing as it is needed for RangeBar)
+                    }
                 }
                 return true;
 
@@ -1274,7 +1308,7 @@ public class RangeBar extends View {
                 for (CharSequence colorHex : colors) {
                     String hexString = colorHex.toString();
 
-                    if(hexString.length() == 4)
+                    if (hexString.length() == 4)
                         hexString += "000";
 
                     mConnectingLineColors.add(Color.parseColor(hexString));
@@ -1483,6 +1517,7 @@ public class RangeBar extends View {
                 pressPin(mRightThumb);
             }
         }
+        mDragging = true;
     }
 
     /**
@@ -1530,6 +1565,7 @@ public class RangeBar extends View {
                 }
             }
         }
+        mDragging = false;
     }
 
     /**
@@ -1686,6 +1722,22 @@ public class RangeBar extends View {
             thumb.setX(x);
             invalidate();
         }
+    }
+
+    /**
+     * This flag is useful for tracking touch events that were meant as scroll events.
+     * Copied from hidden method of {@link View} isInScrollingContainer.
+     * @return true if any of this View parents is a scrolling View.
+     */
+    private boolean isInScrollingContainer() {
+        ViewParent p = getParent();
+        while (p != null && p instanceof ViewGroup) {
+            if (((ViewGroup) p).shouldDelayChildPressedState()) {
+                return true;
+            }
+            p = p.getParent();
+        }
+        return false;
     }
 
     // Inner Classes ///////////////////////////////////////////////////////////
