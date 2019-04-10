@@ -30,7 +30,7 @@ public class RecyclerViewActivity extends Activity {
         @Override
         public VH onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             return new VH(LayoutInflater.from(viewGroup.getContext())
-                    .inflate(R.layout.activity_recyclerview_adapter, viewGroup, false));
+                    .inflate(R.layout.recyclerview_item, viewGroup, false));
         }
 
         @Override
