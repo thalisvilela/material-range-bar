@@ -122,6 +122,15 @@ public class MainActivity extends Activity implements
                 rightIndexValue.setText("" + rightPinIndex);
             }
 
+            @Override
+            public void onTouchEnded(RangeBar rangeBar) {
+                Log.d("RangeBar", "Touch ended");
+            }
+
+            @Override
+            public void onTouchStarted(RangeBar rangeBar) {
+                Log.d("RangeBar", "Touch started");
+            }
         });
 
         // Sets the indices themselves upon input from the user
