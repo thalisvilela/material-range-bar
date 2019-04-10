@@ -1,0 +1,53 @@
+package com.appyvet.rangebarsample;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+
+public class RecyclerViewActivity extends Activity {
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Removes title bar and sets content view
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_recyclerview);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new Adapter());
+    }
+
+    public static class Adapter extends RecyclerView.Adapter<VH> {
+
+        @NonNull
+        @Override
+        public VH onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+            return new VH(LayoutInflater.from(viewGroup.getContext())
+                    .inflate(R.layout.activity_recyclerview_adapter, viewGroup, false));
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull VH vh, int i) {
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return 100;
+        }
+    }
+
+    public static class VH extends RecyclerView.ViewHolder {
+
+        public VH(@NonNull View itemView) {
+            super(itemView);
+        }
+    }
+}
