@@ -1228,8 +1228,8 @@ public class RangeBar extends View {
             mBarColor = DEFAULT_BAR_COLOR;
             setConnectingLineColor(DEFAULT_BAR_COLOR);
             mCircleColor = DEFAULT_BAR_COLOR;
-            mCircleColorLeft = null;
-            mCircleColorRight = null;
+            mCircleColorLeft = mActiveCircleColorLeft;
+            mCircleColorRight = mActiveCircleColorRight;
             mTickColor = DEFAULT_BAR_COLOR;
             setTickColors(DEFAULT_BAR_COLOR);
             mTickLabelColor = DEFAULT_BAR_COLOR;
