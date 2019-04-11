@@ -4,6 +4,7 @@
     <string name="app_name">RangeBar Sample</string>
     <string name="action_settings">Settings</string>
     <string name="title">MaterialRangeBar</string>
+    <string name="title_recyclerview">Rangebar RecyclerView Sample</string>
     <string name="tickStart">Tick Start = 5</string>
     <string name="tickEnd">Tick End = 10</string>
     <string name="tickInterval">Tick Interval = 1</string>
@@ -38,6 +39,7 @@
     <string name="check_box_rounded_background">Rounded background</string>
     <string name="top_tick_labels">Top tick labels</string>
     <string name="bottom_tick_labels">Bottom tick labels</string>
+    <string name="recyclerview_text">Rangebar Recyclerview Implementation</string>
     <string-array translatable="false" name="default_color_choice_values">
         <item>#33b5e5</item>
         <item>#aa66cc</item>

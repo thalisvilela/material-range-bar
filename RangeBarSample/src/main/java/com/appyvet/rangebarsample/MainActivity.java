@@ -2,6 +2,7 @@
 package com.appyvet.rangebarsample;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -427,9 +428,16 @@ public class MainActivity extends Activity implements
             }
         });
 
+        findViewById(R.id.selectorRecyclerView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, RecyclerViewActivity.class));
+            }
+        });
+
     }
-    private int getValueInDP(int value)
-    {
+
+    private int getValueInDP(int value) {
         int valueInDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 value,
                 getResources().getDisplayMetrics());

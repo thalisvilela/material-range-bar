@@ -38,6 +38,8 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -158,9 +160,9 @@ public class RangeBar extends View {
 
     private int mCircleColor = DEFAULT_CONNECTING_LINE_COLOR;
 
-    private Integer mCircleColorLeft = null;
+    private int mCircleColorLeft;
 
-    private Integer mCircleColorRight = null;
+    private int mCircleColorRight;
 
     private int mCircleBoundaryColor = DEFAULT_CONNECTING_LINE_COLOR;
 
@@ -210,15 +212,21 @@ public class RangeBar extends View {
 
     private int mActiveConnectingLineColor;
 
+    private ArrayList<Integer> mActiveConnectingLineColors = new ArrayList<>();
+
     private int mActiveBarColor;
 
     private int mActiveTickColor;
 
+    private ArrayList<Integer> mActiveTickColors = new ArrayList<>();
+
     private int mActiveCircleColor;
 
-    private Integer mActiveCircleColorLeft = null;
+    private int mActiveCircleColorLeft;
 
-    private Integer mActiveCircleColorRight = null;
+    private int mActiveCircleColorRight;
+
+    private int mActiveCircleBoundaryColor;
 
     //Used for ignoring vertical moves
     private int mDiffX;
@@ -236,6 +244,10 @@ public class RangeBar extends View {
     private boolean mArePinsTemporary = true;
 
     private boolean mOnlyOnDrag = false;
+
+    private boolean mDragging = false;
+
+    private boolean mIsInScrollingContainer = false;
 
     private PinTextFormatter mPinTextFormatter = new PinTextFormatter() {
         @Override
@@ -462,6 +474,13 @@ public class RangeBar extends View {
     }
 
     @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        // Cache this value since it only changes if the ViewParent changes
+        mIsInScrollingContainer = isInScrollingContainer();
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
 
         super.onDraw(canvas);
@@ -496,25 +515,32 @@ public class RangeBar extends View {
             case MotionEvent.ACTION_DOWN:
                 mDiffX = 0;
                 mDiffY = 0;
-
                 mLastX = event.getX();
                 mLastY = event.getY();
-                onActionDown(event.getX(), event.getY());
+                // We don't want to change to tick value yet if we're inside a scrolling container.
+                // In this case, the user may be trying to scroll the parent.
+                if (!mIsInScrollingContainer) {
+                    onActionDown(event.getX(), event.getY());
+                }
                 return true;
 
             case MotionEvent.ACTION_UP:
-                this.getParent().requestDisallowInterceptTouchEvent(false);
-                onActionUp(event.getX(), event.getY());
+                // Just release the dragging if we were previously dragging
+                // or if it was a click (last touch event coordinates are the same)
+                if (mDragging || (event.getX() == mLastX && event.getY() == mLastY)) {
+                    this.getParent().requestDisallowInterceptTouchEvent(false);
+                    onActionUp(event.getX(), event.getY());
+                }
                 return true;
 
             case MotionEvent.ACTION_CANCEL:
-                this.getParent().requestDisallowInterceptTouchEvent(false);
-                onActionUp(event.getX(), event.getY());
+                if (mDragging || (event.getX() == mLastX && event.getY() == mLastY)) {
+                    this.getParent().requestDisallowInterceptTouchEvent(false);
+                    onActionUp(event.getX(), event.getY());
+                }
                 return true;
 
             case MotionEvent.ACTION_MOVE:
-                onActionMove(event.getX());
-                this.getParent().requestDisallowInterceptTouchEvent(true);
                 final float curX = event.getX();
                 final float curY = event.getY();
                 mDiffX += Math.abs(curX - mLastX);
@@ -522,12 +548,26 @@ public class RangeBar extends View {
                 mLastX = curX;
                 mLastY = curY;
 
-                if (mDiffX < mDiffY) {
-                    //vertical touch
-                    getParent().requestDisallowInterceptTouchEvent(false);
-                    return false;
+                if (!mDragging) {
+                    if (mDiffX > mDiffY) {
+                        onActionDown(event.getX(), event.getY());
+                        return true;
+                    } else {
+                        return false;
+                    }
                 } else {
-                    //horizontal touch (do nothing as it is needed for RangeBar)
+                    onActionMove(event.getX());
+                    this.getParent().requestDisallowInterceptTouchEvent(true);
+                    if (mDiffX < mDiffY) {
+                        //vertical touch
+                        // Don't let scrolling parents get this touch event
+                        if (!mIsInScrollingContainer) {
+                            getParent().requestDisallowInterceptTouchEvent(false);
+                        }
+                        return false;
+                    } else {
+                        //horizontal touch (do nothing as it is needed for RangeBar)
+                    }
                 }
                 return true;
 
@@ -816,7 +856,7 @@ public class RangeBar extends View {
      */
     public void setTickColors(ArrayList<Integer> tickColors) {
 
-        this.mTickColors = tickColors;
+        this.mTickColors = new ArrayList<>(tickColors);
         createBar();
     }
 
@@ -910,7 +950,7 @@ public class RangeBar extends View {
     }
 
     public void setConnectingLineColors(ArrayList<Integer> connectingLineColors) {
-        mConnectingLineColors = connectingLineColors;
+        mConnectingLineColors = new ArrayList<>(connectingLineColors);
         createConnectingLine();
     }
 
@@ -940,7 +980,7 @@ public class RangeBar extends View {
      *
      * @param mCircleColorRight
      */
-    public void setSelectorColorRight(Integer mCircleColorRight) {
+    public void setSelectorColorRight(int mCircleColorRight) {
         this.mCircleColorRight = mCircleColorRight;
         createPins();
     }
@@ -1127,9 +1167,12 @@ public class RangeBar extends View {
             if (mListener != null) {
                 mListener.onRangeChangeListener(this, mLeftIndex, mRightIndex,
                         getPinValue(mLeftIndex), getPinValue(mRightIndex));
-                mListener.onTouchEnded(this);
             }
         }
+
+        if (mListener != null)
+            mListener.onTouchEnded(this);
+
         invalidate();
         requestLayout();
     }
@@ -1228,8 +1271,9 @@ public class RangeBar extends View {
             mBarColor = DEFAULT_BAR_COLOR;
             setConnectingLineColor(DEFAULT_BAR_COLOR);
             mCircleColor = DEFAULT_BAR_COLOR;
-            mCircleColorLeft = mActiveCircleColorLeft;
-            mCircleColorRight = mActiveCircleColorRight;
+            mCircleColorLeft = DEFAULT_BAR_COLOR;
+            mCircleColorRight = DEFAULT_BAR_COLOR;
+            mCircleBoundaryColor = DEFAULT_BAR_COLOR;
             mTickColor = DEFAULT_BAR_COLOR;
             setTickColors(DEFAULT_BAR_COLOR);
             mTickLabelColor = DEFAULT_BAR_COLOR;
@@ -1237,11 +1281,13 @@ public class RangeBar extends View {
         } else {
             mBarColor = mActiveBarColor;
             setConnectingLineColor(mActiveConnectingLineColor);
+            setConnectingLineColors(mActiveConnectingLineColors);
             mCircleColor = mActiveCircleColor;
             mCircleColorLeft = mActiveCircleColorLeft;
             mCircleColorRight = mActiveCircleColorRight;
+            mCircleBoundaryColor = mActiveCircleBoundaryColor;
             mTickColor = mActiveTickColor;
-            setTickColors(mActiveTickColor);
+            setTickColors(mActiveTickColors);
             mTickLabelColor = mActiveTickLabelColor;
             mTickLabelSelectedColor = mActiveTickLabelSelectedColor;
         }
@@ -1358,12 +1404,14 @@ public class RangeBar extends View {
             mActiveCircleColor = mCircleColor;
             mActiveCircleColorLeft = mCircleColorLeft;
             mActiveCircleColorRight = mCircleColorRight;
+            mActiveCircleBoundaryColor = mCircleBoundaryColor;
             mTickColor = ta.getColor(R.styleable.RangeBar_mrb_tickColor, DEFAULT_TICK_COLOR);
             mTickColors = getColors(ta.getTextArray(R.styleable.RangeBar_mrb_tickColors), mTickColor);
             mActiveTickColor = mTickColor;
 
             mTickLabelColor = ta.getColor(R.styleable.RangeBar_mrb_tickLabelColor, DEFAULT_TICK_LABEL_COLOR);
             mActiveTickLabelColor = mTickLabelColor;
+            mActiveTickColors = new ArrayList<>(mTickColors);
             mTickLabelSelectedColor = ta.getColor(R.styleable.RangeBar_mrb_tickLabelSelectedColor, DEFAULT_TICK_LABEL_SELECTED_COLOR);
             mActiveTickLabelSelectedColor = mTickLabelSelectedColor;
 
@@ -1376,7 +1424,21 @@ public class RangeBar extends View {
                     DEFAULT_CONNECTING_LINE_COLOR);
             mActiveConnectingLineColor = mConnectingLineColor;
 
-            mConnectingLineColors = getColors(ta.getTextArray(R.styleable.RangeBar_mrb_connectingLineColors), mConnectingLineColor);
+            CharSequence[] colors = ta.getTextArray(R.styleable.RangeBar_mrb_connectingLineColors);
+            if (colors != null && colors.length > 0) {
+                for (CharSequence colorHex : colors) {
+                    String hexString = colorHex.toString();
+
+                    if (hexString.length() == 4)
+                        hexString += "000";
+
+                    mConnectingLineColors.add(Color.parseColor(hexString));
+                }
+            } else {
+                mConnectingLineColors.add(mConnectingLineColor);
+            }
+
+            mActiveConnectingLineColors = new ArrayList<>(mConnectingLineColors);
 
             mIsRangeBar = ta.getBoolean(R.styleable.RangeBar_mrb_rangeBar, true);
             mArePinsTemporary = ta.getBoolean(R.styleable.RangeBar_mrb_temporaryPins, true);
@@ -1578,6 +1640,7 @@ public class RangeBar extends View {
                 pressPin(mRightThumb);
             }
         }
+        mDragging = true;
 
         if (mListener != null)
             mListener.onTouchStarted(this);
@@ -1628,6 +1691,8 @@ public class RangeBar extends View {
                 }
             }
         }
+        mDragging = false;
+
         if (mListener != null)
             mListener.onTouchEnded(this);
     }
@@ -1806,6 +1871,22 @@ public class RangeBar extends View {
             thumb.setX(x);
             invalidate();
         }
+    }
+
+    /**
+     * This flag is useful for tracking touch events that were meant as scroll events.
+     * Copied from hidden method of {@link View} isInScrollingContainer.
+     * @return true if any of this View parents is a scrolling View.
+     */
+    private boolean isInScrollingContainer() {
+        ViewParent p = getParent();
+        while (p != null && p instanceof ViewGroup) {
+            if (((ViewGroup) p).shouldDelayChildPressedState()) {
+                return true;
+            }
+            p = p.getParent();
+        }
+        return false;
     }
 
     // Inner Classes ///////////////////////////////////////////////////////////
