@@ -848,6 +848,7 @@ public class RangeBar extends View {
      */
     public void setTickColor(int tickColor) {
         mTickColor = tickColor;
+        setTickColors(tickColor);
         createBar();
     }
 
@@ -902,6 +903,8 @@ public class RangeBar extends View {
      */
     public void setSelectorColor(int selectorColor) {
         mCircleColor = selectorColor;
+        setSelectorColorLeft(selectorColor);
+        setSelectorColorRight(selectorColor);
         createPins();
     }
 
