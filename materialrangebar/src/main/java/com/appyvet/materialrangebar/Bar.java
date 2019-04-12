@@ -412,7 +412,7 @@ public class Bar {
 
         Rect labelBounds = new Rect();
         mLabelPaint.getTextBounds(label, 0, label.length(), labelBounds);
-        float xPos = x - labelBounds.width() / 2;
+        float xPos = x - labelBounds.width()/2;
 
         if (first) {
             xPos += mTickHeight;

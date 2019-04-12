@@ -120,8 +120,6 @@ public class MainActivity extends Activity implements
                                               int rightPinIndex, String leftPinValue, String rightPinValue) {
                 leftIndexValue.setText("" + leftPinIndex);
                 rightIndexValue.setText("" + rightPinIndex);
-
-                
             }
 
             @Override
