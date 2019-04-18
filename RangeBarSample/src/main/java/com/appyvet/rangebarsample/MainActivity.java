@@ -491,10 +491,7 @@ public class MainActivity extends Activity implements
                 break;
             case TICK_COLOR:
                 mTickColor = newColor;
-//                rangebar.setTickDefaultColor(newColor);
-                ArrayList<Integer> colors = new ArrayList<>();
-                colors.add(newColor);
-                rangebar.setTickColors(colors);
+                rangebar.setTickDefaultColor(newColor);
                 final TextView tickColorText = (TextView) findViewById(R.id.tickColor);
                 tickColorText.setText("tickColor = " + hexColor);
                 tickColorText.setTextColor(newColor);
