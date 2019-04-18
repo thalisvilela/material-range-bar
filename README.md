@@ -36,7 +36,8 @@ mrb_tickStart | float
 mrb_tickEnd | float
 mrb_tickInterval | float
 mrb_tickHeight | dimension
-mrb_tickColor | color
+mrb_tickDefaultColor | color
+mrb_tickColors  | reference (array of hex colors)
 ```
 
 ### Tick Label Properties
@@ -76,6 +77,8 @@ mrb_temporaryPins | boolean
 ### Selector Properties
 ```
 mrb_selectorColor | reference or color
+mrb_selectorColorLeft | reference or color
+mrb_selectorColorRight | reference or color
 mrb_selectorSize | dimension
 mrb_selectorBoundaryColor | reference or color
 mrb_selectorBoundarySize | dimension

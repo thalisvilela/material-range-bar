@@ -15,4 +15,11 @@
         <item>label4</item>
         <item>label5</item>
     </string-array>
+
+    <string-array name="tick_colors">
+        <item>#FF5722</item>
+        <item>#F00000</item>
+        <item>#0000FF</item>
+        <item>#16C450</item>
+    </string-array>
 </resources>

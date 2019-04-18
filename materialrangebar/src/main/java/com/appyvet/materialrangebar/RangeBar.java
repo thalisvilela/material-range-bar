@@ -136,7 +136,7 @@ public class RangeBar extends View {
 
     private float mThumbRadiusDP = DEFAULT_EXPANDED_PIN_RADIUS_DP;
 
-    private int mTickColor = DEFAULT_TICK_COLOR;
+    private int mTickDefaultColor = DEFAULT_TICK_COLOR;
 
     private ArrayList<Integer> mTickColors = new ArrayList<>();
 
@@ -216,8 +216,6 @@ public class RangeBar extends View {
 
     private int mActiveBarColor;
 
-    private int mActiveTickColor;
-
     private ArrayList<Integer> mActiveTickColors = new ArrayList<>();
 
     private int mActiveCircleColor;
@@ -289,7 +287,7 @@ public class RangeBar extends View {
         bundle.putFloat("TICK_START", mTickStart);
         bundle.putFloat("TICK_END", mTickEnd);
         bundle.putFloat("TICK_INTERVAL", mTickInterval);
-        bundle.putInt("TICK_COLOR", mTickColor);
+        bundle.putInt("TICK_COLOR", mTickDefaultColor);
         bundle.putIntegerArrayList("TICK_COLORS", mTickColors);
         bundle.putInt("TICK_LABEL_COLOR", mTickLabelColor);
         bundle.putInt("TICK_LABEL_SELECTED_COLOR", mTickLabelSelectedColor);
@@ -339,7 +337,7 @@ public class RangeBar extends View {
             mTickStart = bundle.getFloat("TICK_START");
             mTickEnd = bundle.getFloat("TICK_END");
             mTickInterval = bundle.getFloat("TICK_INTERVAL");
-            mTickColor = bundle.getInt("TICK_COLOR");
+            mTickDefaultColor = bundle.getInt("TICK_COLOR");
             mTickColors = bundle.getIntegerArrayList("TICK_COLORS");
             mTickLabelColor = bundle.getInt("TICK_LABEL_COLOR");
             mTickLabelSelectedColor = bundle.getInt("TICK_LABEL_SELECTED_COLOR");
@@ -840,39 +838,26 @@ public class RangeBar extends View {
         invalidate();
     }
 
+     /**
+      * Set the default color of the ticks.
+      *
+      * @param tickDefaultColor Integer specifying the color of the ticks.
+      */
 
-    /**
-     * Set the color of the ticks.
-     *
-     * @param tickColor Integer specifying the color of the ticks.
-     */
-    public void setTickColor(int tickColor) {
-        mTickColor = tickColor;
-        setTickColors(tickColor);
+    public void setTickDefaultColor(int tickDefaultColor) {
+        this.mTickDefaultColor = tickDefaultColor;
+        setTickColors(createDefaultTickColors(tickDefaultColor, mTickCount));
         createBar();
     }
 
     /**
-     * Set the color of the ticks.
+     * Set the colors of the ticks.
      *
      * @param tickColors List of Integers specifying the color of the ticks.
      */
     public void setTickColors(ArrayList<Integer> tickColors) {
 
         this.mTickColors = new ArrayList<>(tickColors);
-        createBar();
-    }
-
-    /**
-     * Set the color of the ticks.
-     *
-     * @param color Integer specifying the color of the ticks.
-     */
-    public void setTickColors(int color) {
-        for (int i = 0; i < mTickColors.size(); i++) {
-            mTickColors.set(i, color);
-        }
-
         createBar();
     }
 
@@ -1059,11 +1044,17 @@ public class RangeBar extends View {
      * @return List of colors
      */
     public ArrayList<Integer> getTickColors() {
+
         return mTickColors;
     }
 
 
-    public int getTickColors(int index) {
+    /**
+     *
+     * @param index
+     * @return specified color
+     */
+    public int getTickColor(int index) {
 
         return mTickColors.get(index).intValue();
     }
@@ -1279,8 +1270,8 @@ public class RangeBar extends View {
             mCircleColorLeft = DEFAULT_BAR_COLOR;
             mCircleColorRight = DEFAULT_BAR_COLOR;
             mCircleBoundaryColor = DEFAULT_BAR_COLOR;
-            mTickColor = DEFAULT_BAR_COLOR;
-            setTickColors(DEFAULT_BAR_COLOR);
+            mTickDefaultColor = DEFAULT_BAR_COLOR;
+            setTickColors(createDefaultTickColors(DEFAULT_BAR_COLOR, mTickCount));
             mTickLabelColor = DEFAULT_BAR_COLOR;
             mTickLabelSelectedColor = DEFAULT_BAR_COLOR;
         } else {
@@ -1291,7 +1282,6 @@ public class RangeBar extends View {
             mCircleColorLeft = mActiveCircleColorLeft;
             mCircleColorRight = mActiveCircleColorRight;
             mCircleBoundaryColor = mActiveCircleBoundaryColor;
-            mTickColor = mActiveTickColor;
             setTickColors(mActiveTickColors);
             mTickLabelColor = mActiveTickLabelColor;
             mTickLabelSelectedColor = mActiveTickLabelSelectedColor;
@@ -1410,13 +1400,12 @@ public class RangeBar extends View {
             mActiveCircleColorLeft = mCircleColorLeft;
             mActiveCircleColorRight = mCircleColorRight;
             mActiveCircleBoundaryColor = mCircleBoundaryColor;
-            mTickColor = ta.getColor(R.styleable.RangeBar_mrb_tickColor, DEFAULT_TICK_COLOR);
-            mTickColors = getColors(ta.getTextArray(R.styleable.RangeBar_mrb_tickColors), mTickColor);
-            mActiveTickColor = mTickColor;
+            mTickDefaultColor = ta.getColor(R.styleable.RangeBar_mrb_tickDefaultColor , DEFAULT_TICK_COLOR);
+            mTickColors = getColors(ta.getTextArray(R.styleable.RangeBar_mrb_tickColors), mTickDefaultColor, mTickCount);
+            mActiveTickColors = new ArrayList<>(mTickColors);
 
             mTickLabelColor = ta.getColor(R.styleable.RangeBar_mrb_tickLabelColor, DEFAULT_TICK_LABEL_COLOR);
             mActiveTickLabelColor = mTickLabelColor;
-            mActiveTickColors = new ArrayList<>(mTickColors);
             mTickLabelSelectedColor = ta.getColor(R.styleable.RangeBar_mrb_tickLabelSelectedColor, DEFAULT_TICK_LABEL_SELECTED_COLOR);
             mActiveTickLabelSelectedColor = mTickLabelSelectedColor;
 
@@ -1840,25 +1829,49 @@ public class RangeBar extends View {
         return mPinTextFormatter.getText(xValue);
     }
 
+    /**
+     * Loads list of colors and sets default
+     * @param colors
+     * @param defaultColor
+     * @param tickCount total number of ticks
+     * @return ArrayList<Integer>
+     */
+    private ArrayList<Integer> getColors(CharSequence[] colors, int defaultColor, int tickCount) {
+        ArrayList<Integer> colorList = createDefaultTickColors(defaultColor, tickCount);
 
-    private ArrayList<Integer> getColors(CharSequence[] colors, int defaultColor) {
-        ArrayList<Integer> colorList = new ArrayList<>();
-
-        if (colors != null && colors.length > 0) {
-            for (CharSequence colorHex : colors) {
-                String hexString = colorHex.toString();
+        if (colors != null
+                && colors.length > 0
+                && colors.length <= tickCount) {
+            for (int i=0; i<colors.length; i++) {
+                String hexString = colors[i].toString();
 
                 if (hexString.length() == 4)
                     hexString += "000";
 
-                colorList.add(Color.parseColor(hexString));
+                colorList.set(i, Color.parseColor(hexString));
             }
-        } else {
-            colorList.add(defaultColor);
         }
 
         return colorList;
     }
+
+
+    /**
+     * Create list of default color ticks.
+     *
+     * @param color Integer specifying the color of the ticks.
+     * @param tickCount Integer specifying number of total ticks
+     */
+    private ArrayList<Integer> createDefaultTickColors(int color, int tickCount) {
+        ArrayList<Integer> tickColors = new ArrayList<>();
+
+        for (int i=0; i<tickCount; i++) {
+            tickColors.add(color);
+        }
+
+        return tickColors;
+    }
+
 
     /**
      * Moves the thumb to the given x-coordinate.

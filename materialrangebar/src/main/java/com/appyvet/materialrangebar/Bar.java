@@ -121,7 +121,7 @@ public class Bar {
      * @param length       the length of the bar in px
      * @param tickCount    the number of ticks on the bar
      * @param tickHeight   the height of each tick
-     * @param tickColor    the color of each tick
+     * @param tickDefaultColor    the color of all ticks
      * @param barWeight    the weight of the bar
      * @param barColor     the color of the bar
      * @param isBarRounded if the bar has rounded edges or not
@@ -132,13 +132,13 @@ public class Bar {
                float length,
                int tickCount,
                float tickHeight,
-               int tickColor,
+               int tickDefaultColor,
                float barWeight,
                int barColor,
                boolean isBarRounded) {
         this(ctx, x, y, length, tickCount, tickHeight, barWeight, barColor, isBarRounded);
 
-        mTickPaint.setColor(tickColor);
+        mTickPaint.setColor(tickDefaultColor);
     }
 
     /**
@@ -197,7 +197,7 @@ public class Bar {
      * @param length           the length of the bar in px
      * @param tickCount        the number of ticks on the bar
      * @param tickHeight       the height of each tick
-     * @param tickColor        the color of each tick
+     * @param tickDefaultColor the default color of all ticks
      * @param barWeight        the weight of the bar
      * @param barColor         the color of the bar
      * @param isBarRounded     if the bar has rounded edges or not
@@ -211,7 +211,7 @@ public class Bar {
                float length,
                int tickCount,
                float tickHeight,
-               int tickColor,
+               int tickDefaultColor,
                float barWeight,
                int barColor,
                boolean isBarRounded,
@@ -222,7 +222,7 @@ public class Bar {
                String tickDefaultLabel,
                float tickLabelSize) {
         this(ctx, x, y, length, tickCount, tickHeight, barWeight, barColor, isBarRounded, tickLabelColor, tickLabelSelectedColor, tickTopLabels, tickBottomLabels, tickDefaultLabel, tickLabelSize);
-        mTickPaint.setColor(tickColor);
+        mTickPaint.setColor(tickDefaultColor);
     }
 
     /**
