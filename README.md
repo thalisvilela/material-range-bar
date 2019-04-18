@@ -57,9 +57,9 @@ mrb_barWeight | dimension
 mrb_rangeBarColor | reference or color
 mrb_rangeBarPaddingBottom | dimension
 mrb_rangeBar_rounded | boolean
-mrb_temporaryPins | boolean
 mrb_connectingLineWeight | dimension
-mrb_connectingLineColor | reference (array of hex colors)
+mrb_connectingLineColors | reference (array of hex colors)
+mrb_connectingLineColor | reference or color
 mrb_onlyOnDrag | boolean
 ```
 
