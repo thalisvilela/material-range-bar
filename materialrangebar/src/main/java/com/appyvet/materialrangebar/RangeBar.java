@@ -856,8 +856,7 @@ public class RangeBar extends View {
      * @param tickColors List of Integers specifying the color of the ticks.
      */
     public void setTickColors(ArrayList<Integer> tickColors) {
-
-        this.mTickColors = new ArrayList<>(tickColors);
+        this.mTickColors = addTickColors(tickColors, mTickDefaultColor, mTickCount);
         createBar();
     }
 
@@ -1870,6 +1869,25 @@ public class RangeBar extends View {
         }
 
         return tickColors;
+    }
+
+    /**
+     * Create a new list of tick colors with default color based upon tick count.
+     *
+     * @param tickColors list of colors to go at beginning
+     * @param color Integer specifying the color of the ticks.
+     * @param tickCount Integer specifying number of total ticks
+     */
+    private ArrayList<Integer> addTickColors(ArrayList<Integer> tickColors, int color, int tickCount) {
+        ArrayList<Integer> colorList = createDefaultTickColors(color, tickCount);
+
+        for (int i=0; i<colorList.size(); i++) {
+            if (i<tickColors.size() && tickColors.get(i) != null) {
+                colorList.set(i, tickColors.get(i));
+            }
+        }
+
+        return colorList;
     }
 
 

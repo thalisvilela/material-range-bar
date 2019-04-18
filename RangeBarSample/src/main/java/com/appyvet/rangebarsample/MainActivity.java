@@ -20,6 +20,9 @@ import com.appyvet.materialrangebar.RangeBar;
 import com.appyvet.rangebarsample.colorpicker.ColorPickerDialog;
 import com.appyvet.rangebarsample.colorpicker.Utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class MainActivity extends Activity implements
         ColorPickerDialog.OnColorSelectedListener {
@@ -488,7 +491,10 @@ public class MainActivity extends Activity implements
                 break;
             case TICK_COLOR:
                 mTickColor = newColor;
-                rangebar.setTickDefaultColor(newColor);
+//                rangebar.setTickDefaultColor(newColor);
+                ArrayList<Integer> colors = new ArrayList<>();
+                colors.add(newColor);
+                rangebar.setTickColors(colors);
                 final TextView tickColorText = (TextView) findViewById(R.id.tickColor);
                 tickColorText.setText("tickColor = " + hexColor);
                 tickColorText.setTextColor(newColor);
