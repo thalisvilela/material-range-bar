@@ -216,6 +216,8 @@ public class RangeBar extends View {
 
     private int mActiveBarColor;
 
+    private int mActivemTickDefaultColor;
+
     private ArrayList<Integer> mActiveTickColors = new ArrayList<>();
 
     private int mActiveCircleColor;
@@ -443,7 +445,7 @@ public class RangeBar extends View {
 
         final float barLength = w - (2 * marginLeft);
 
-        mBar = new Bar(ctx, marginLeft, yPos, barLength, mTickCount, mTickHeight, mTickColors,
+        mBar = new Bar(ctx, marginLeft, yPos, barLength, mTickCount, mTickHeight, mTickDefaultColor, mTickColors,
                 mBarWeight, mBarColor, mIsBarRounded, mTickLabelColor, mTickLabelSelectedColor,
                 mTickTopLabels, mTickBottomLabels, mTickDefaultLabel, mTickLabelSize);
 
@@ -846,7 +848,7 @@ public class RangeBar extends View {
 
     public void setTickDefaultColor(int tickDefaultColor) {
         this.mTickDefaultColor = tickDefaultColor;
-        setTickColors(createDefaultTickColors(tickDefaultColor, mTickCount));
+        setTickColors(tickDefaultColor);
         createBar();
     }
 
@@ -856,7 +858,20 @@ public class RangeBar extends View {
      * @param tickColors List of Integers specifying the color of the ticks.
      */
     public void setTickColors(ArrayList<Integer> tickColors) {
-        this.mTickColors = addTickColors(tickColors, mTickDefaultColor, mTickCount);
+        this.mTickColors = new ArrayList<>(tickColors);
+        createBar();
+    }
+
+    /**
+     * Set the color of the ticks.
+     *
+     * @param color Integer specifying the color of the ticks.
+     */
+    public void setTickColors(int color) {
+        for (int i = 0; i < mTickColors.size(); i++) {
+            mTickColors.set(i, color);
+        }
+
         createBar();
     }
 
@@ -1270,7 +1285,7 @@ public class RangeBar extends View {
             mCircleColorRight = DEFAULT_BAR_COLOR;
             mCircleBoundaryColor = DEFAULT_BAR_COLOR;
             mTickDefaultColor = DEFAULT_BAR_COLOR;
-            setTickColors(createDefaultTickColors(DEFAULT_BAR_COLOR, mTickCount));
+            setTickColors(DEFAULT_BAR_COLOR);
             mTickLabelColor = DEFAULT_BAR_COLOR;
             mTickLabelSelectedColor = DEFAULT_BAR_COLOR;
         } else {
@@ -1281,6 +1296,7 @@ public class RangeBar extends View {
             mCircleColorLeft = mActiveCircleColorLeft;
             mCircleColorRight = mActiveCircleColorRight;
             mCircleBoundaryColor = mActiveCircleBoundaryColor;
+            mTickDefaultColor = mActivemTickDefaultColor;
             setTickColors(mActiveTickColors);
             mTickLabelColor = mActiveTickLabelColor;
             mTickLabelSelectedColor = mActiveTickLabelSelectedColor;
@@ -1400,7 +1416,8 @@ public class RangeBar extends View {
             mActiveCircleColorRight = mCircleColorRight;
             mActiveCircleBoundaryColor = mCircleBoundaryColor;
             mTickDefaultColor = ta.getColor(R.styleable.RangeBar_mrb_tickDefaultColor , DEFAULT_TICK_COLOR);
-            mTickColors = getColors(ta.getTextArray(R.styleable.RangeBar_mrb_tickColors), mTickDefaultColor, mTickCount);
+            mActivemTickDefaultColor = mTickDefaultColor;
+            mTickColors = getColors(ta.getTextArray(R.styleable.RangeBar_mrb_tickColors), mTickDefaultColor);
             mActiveTickColors = new ArrayList<>(mTickColors);
 
             mTickLabelColor = ta.getColor(R.styleable.RangeBar_mrb_tickLabelColor, DEFAULT_TICK_LABEL_COLOR);
@@ -1463,6 +1480,7 @@ public class RangeBar extends View {
                 getBarLength(),
                 mTickCount,
                 mTickHeight,
+                mTickDefaultColor,
                 mTickColors,
                 mBarWeight,
                 mBarColor,
@@ -1831,65 +1849,26 @@ public class RangeBar extends View {
     /**
      * Loads list of colors and sets default
      * @param colors
-     * @param defaultColor
-     * @param tickCount total number of ticks
      * @return ArrayList<Integer>
      */
-    private ArrayList<Integer> getColors(CharSequence[] colors, int defaultColor, int tickCount) {
-        ArrayList<Integer> colorList = createDefaultTickColors(defaultColor, tickCount);
+    private ArrayList<Integer> getColors(CharSequence[] colors, int defaultColor) {
+        ArrayList<Integer> colorList = new ArrayList<>();
 
-        if (colors != null
-                && colors.length > 0
-                && colors.length <= tickCount) {
-            for (int i=0; i<colors.length; i++) {
-                String hexString = colors[i].toString();
+        if (colors != null && colors.length > 0) {
+            for (CharSequence colorHex : colors) {
+                String hexString = colorHex.toString();
 
                 if (hexString.length() == 4)
                     hexString += "000";
 
-                colorList.set(i, Color.parseColor(hexString));
+                colorList.add(Color.parseColor(hexString));
             }
+        } else {
+            colorList.add(defaultColor);
         }
 
         return colorList;
     }
-
-
-    /**
-     * Create list of default color ticks.
-     *
-     * @param color Integer specifying the color of the ticks.
-     * @param tickCount Integer specifying number of total ticks
-     */
-    private ArrayList<Integer> createDefaultTickColors(int color, int tickCount) {
-        ArrayList<Integer> tickColors = new ArrayList<>();
-
-        for (int i=0; i<tickCount; i++) {
-            tickColors.add(color);
-        }
-
-        return tickColors;
-    }
-
-    /**
-     * Create a new list of tick colors with default color based upon tick count.
-     *
-     * @param tickColors list of colors to go at beginning
-     * @param color Integer specifying the color of the ticks.
-     * @param tickCount Integer specifying number of total ticks
-     */
-    private ArrayList<Integer> addTickColors(ArrayList<Integer> tickColors, int color, int tickCount) {
-        ArrayList<Integer> colorList = createDefaultTickColors(color, tickCount);
-
-        for (int i=0; i<colorList.size(); i++) {
-            if (i<tickColors.size() && tickColors.get(i) != null) {
-                colorList.set(i, tickColors.get(i));
-            }
-        }
-
-        return colorList;
-    }
-
 
     /**
      * Moves the thumb to the given x-coordinate.

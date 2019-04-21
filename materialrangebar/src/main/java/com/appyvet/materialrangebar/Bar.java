@@ -64,6 +64,8 @@ public class Bar {
 
     private float mTickLabelSize;
 
+    private int mTickDefaultColor;
+
     private List<Integer> mTickColors = new ArrayList<>();
 
     // Constructor /////////////////////////////////////////////////////////////
@@ -138,6 +140,7 @@ public class Bar {
                boolean isBarRounded) {
         this(ctx, x, y, length, tickCount, tickHeight, barWeight, barColor, isBarRounded);
 
+        mTickDefaultColor = tickDefaultColor;
         mTickPaint.setColor(tickDefaultColor);
     }
 
@@ -222,6 +225,7 @@ public class Bar {
                String tickDefaultLabel,
                float tickLabelSize) {
         this(ctx, x, y, length, tickCount, tickHeight, barWeight, barColor, isBarRounded, tickLabelColor, tickLabelSelectedColor, tickTopLabels, tickBottomLabels, tickDefaultLabel, tickLabelSize);
+        mTickDefaultColor = tickDefaultColor;
         mTickPaint.setColor(tickDefaultColor);
     }
 
@@ -234,6 +238,7 @@ public class Bar {
      * @param length           the length of the bar in px
      * @param tickCount        the number of ticks on the bar
      * @param tickHeight       the height of each tick
+     * @param tickDefaultColor        defualt tick color
      * @param tickColors       the colors of each tick
      * @param barWeight        the weight of the bar
      * @param barColor         the color of the bar
@@ -248,6 +253,7 @@ public class Bar {
                float length,
                int tickCount,
                float tickHeight,
+               int tickDefaultColor,
                List<Integer> tickColors,
                float barWeight,
                int barColor,
@@ -261,9 +267,8 @@ public class Bar {
 
         this(ctx, x, y, length, tickCount, tickHeight, barWeight, barColor, isBarRounded, tickLabelColor, tickLabelSelectedColor, tickTopLabels, tickBottomLabels, tickDefaultLabel, tickLabelSize);
 
-        if (null != tickColors) {
-            mTickColors = tickColors;
-        }
+        mTickDefaultColor = tickDefaultColor;
+        mTickColors = tickColors;
     }
     // Package-Private Methods /////////////////////////////////////////////////
 
@@ -441,8 +446,10 @@ public class Bar {
 
     private Paint getTick(int index) {
 
-        if (index < mTickColors.size()) {
+        if (mTickColors != null && index < mTickColors.size()) {
             mTickPaint.setColor(mTickColors.get(index));
+        } else {
+            mTickPaint.setColor(mTickDefaultColor);
         }
 
         return mTickPaint;
