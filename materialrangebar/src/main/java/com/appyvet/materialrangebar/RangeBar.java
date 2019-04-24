@@ -1404,9 +1404,9 @@ public class RangeBar extends View {
             mCircleColor = ta.getColor(R.styleable.RangeBar_mrb_selectorColor,
                     DEFAULT_CONNECTING_LINE_COLOR);
 
-            mCircleColorLeft = ta.getColor(R.styleable.RangeBar_mrb_selectorColorLeft,
+            mCircleColorLeft = ta.getColor(R.styleable.RangeBar_mrb_leftSelectorColor,
                     mCircleColor);
-            mCircleColorRight = ta.getColor(R.styleable.RangeBar_mrb_selectorColorRight,
+            mCircleColorRight = ta.getColor(R.styleable.RangeBar_mrb_rightSelectorColor,
                     mCircleColor);
             mCircleBoundaryColor = ta.getColor(R.styleable.RangeBar_mrb_selectorBoundaryColor,
                     DEFAULT_CONNECTING_LINE_COLOR);
