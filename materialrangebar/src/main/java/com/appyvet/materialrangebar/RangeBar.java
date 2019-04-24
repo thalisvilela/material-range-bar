@@ -216,7 +216,7 @@ public class RangeBar extends View {
 
     private int mActiveBarColor;
 
-    private int mActivemTickDefaultColor;
+    private int mActiveTickDefaultColor;
 
     private ArrayList<Integer> mActiveTickColors = new ArrayList<>();
 
@@ -1296,7 +1296,7 @@ public class RangeBar extends View {
             mCircleColorLeft = mActiveCircleColorLeft;
             mCircleColorRight = mActiveCircleColorRight;
             mCircleBoundaryColor = mActiveCircleBoundaryColor;
-            mTickDefaultColor = mActivemTickDefaultColor;
+            mTickDefaultColor = mActiveTickDefaultColor;
             setTickColors(mActiveTickColors);
             mTickLabelColor = mActiveTickLabelColor;
             mTickLabelSelectedColor = mActiveTickLabelSelectedColor;
@@ -1416,7 +1416,7 @@ public class RangeBar extends View {
             mActiveCircleColorRight = mCircleColorRight;
             mActiveCircleBoundaryColor = mCircleBoundaryColor;
             mTickDefaultColor = ta.getColor(R.styleable.RangeBar_mrb_tickDefaultColor , DEFAULT_TICK_COLOR);
-            mActivemTickDefaultColor = mTickDefaultColor;
+            mActiveTickDefaultColor = mTickDefaultColor;
             mTickColors = getColors(ta.getTextArray(R.styleable.RangeBar_mrb_tickColors), mTickDefaultColor);
             mActiveTickColors = new ArrayList<>(mTickColors);
 
