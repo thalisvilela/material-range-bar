@@ -397,7 +397,7 @@ public class Bar {
         }
         // Draw final tick. We draw the final tick outside the loop to avoid any
         // rounding discrepancies.
-        canvas.drawCircle(mRightX, mY, mTickHeight, getTick(mNumSegments-1));
+        canvas.drawCircle(mRightX, mY, mTickHeight, getTick(mNumSegments));
 
         // Draw final tick's label outside the loop
         if (paintLabel) {
