@@ -145,6 +145,15 @@ public class Bar {
     }
 
     /**
+     * Gets the current tick distance in pixels.
+     *
+     * @return the tick distance in pixels.
+     */
+    public float getTickDistance() {
+        return mTickDistance;
+    }
+
+    /**
      * Bar constructor
      *
      * @param ctx              the context

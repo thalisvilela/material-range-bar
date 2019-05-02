@@ -66,6 +66,8 @@ public class RangeBar extends View {
     // Default values for variables
     private static final float DEFAULT_TICK_START = 0;
 
+    private static final float DEFAULT_MIN_TICK_DISTANCE = 0;
+
     private static final float DEFAULT_TICK_END = 5;
 
     private static final float DEFAULT_TICK_INTERVAL = 1;
@@ -115,6 +117,8 @@ public class RangeBar extends View {
     private float mTickHeight = DEFAULT_TICK_HEIGHT_DP;
 
     private float mTickStart = DEFAULT_TICK_START;
+
+    private float mMinTickDistance = DEFAULT_MIN_TICK_DISTANCE;
 
     private float mTickEnd = DEFAULT_TICK_END;
 
@@ -579,6 +583,14 @@ public class RangeBar extends View {
     }
 
     // Public Methods //////////////////////////////////////////////////////////
+
+    /**
+     * Sets min tick distance
+     * @param minDistance int specifying the min tick distance
+     */
+    public void setDefaultMinTickDistance(int minDistance){
+        this.mMinTickDistance = minDistance;
+    }
 
 
     /**
@@ -1720,6 +1732,25 @@ public class RangeBar extends View {
             movePin(mLeftThumb, x);
         } else if (mRightThumb.isPressed()) {
             movePin(mRightThumb, x);
+        }
+
+        // Correct pin indices if we've moved too far and we're not collapsible
+        if (mIsRangeBar) {
+            // Get the new coordinate values and current tick distance
+            float leftX = mLeftThumb.getX();
+            float rightX = mRightThumb.getX();
+            float tickDistance = mBar.getTickDistance()*this.mMinTickDistance;
+
+            // Check to see if they are now too close
+            if (leftX + tickDistance > rightX) {
+                if (mLeftThumb.isPressed()) {
+                    // Set left thumb position to the tick left of the right pin
+                    movePin(mLeftThumb, rightX - tickDistance);
+                } else if (mRightThumb.isPressed()) {
+                    // Set right thumb position to the tick right of the left pin
+                    movePin(mRightThumb, leftX + tickDistance);
+                }
+            }
         }
 
         // If the thumbs have switched order, fix the references.
