@@ -77,8 +77,8 @@ mrb_temporaryPins | boolean
 ### Selector Properties
 ```
 mrb_selectorColor | reference or color
-mrb_selectorColorLeft | reference or color
-mrb_selectorColorRight | reference or color
+mrb_leftSelectorColor | reference or color
+mrb_rightSelectorColor | reference or color
 mrb_selectorSize | dimension
 mrb_selectorBoundaryColor | reference or color
 mrb_selectorBoundarySize | dimension

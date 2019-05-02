@@ -902,8 +902,8 @@ public class RangeBar extends View {
      */
     public void setSelectorColor(int selectorColor) {
         mCircleColor = selectorColor;
-        setSelectorColorLeft(selectorColor);
-        setSelectorColorRight(selectorColor);
+        setLeftSelectorColor(selectorColor);
+        setRightSelectorColor(selectorColor);
         createPins();
     }
 
@@ -974,7 +974,7 @@ public class RangeBar extends View {
      *
      * @param mCircleColorLeft
      */
-    public void setSelectorColorLeft(int mCircleColorLeft) {
+    public void setLeftSelectorColor(int mCircleColorLeft) {
         this.mCircleColorLeft = mCircleColorLeft;
         createPins();
     }
@@ -984,7 +984,7 @@ public class RangeBar extends View {
      *
      * @param mCircleColorRight
      */
-    public void setSelectorColorRight(int mCircleColorRight) {
+    public void setRightSelectorColor(int mCircleColorRight) {
         this.mCircleColorRight = mCircleColorRight;
         createPins();
     }
@@ -994,7 +994,7 @@ public class RangeBar extends View {
      *
      * @return
      */
-    public int getSelectorColorLeft() {
+    public int getLeftSelectorColor() {
         return mCircleColorLeft;
     }
 
@@ -1003,7 +1003,7 @@ public class RangeBar extends View {
      *
      * @return
      */
-    public int getSelectorColorRight() {
+    public int getRightSelectorColor() {
         return mCircleColorRight;
     }
 
