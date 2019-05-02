@@ -588,7 +588,7 @@ public class RangeBar extends View {
      * Sets min tick distance
      * @param minDistance int specifying the min tick distance
      */
-    public void setDefaultMinTickDistance(int minDistance){
+    public void setMinTickDistance(int minDistance){
         this.mMinTickDistance = minDistance;
     }
 
