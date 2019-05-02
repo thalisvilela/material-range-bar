@@ -1686,33 +1686,33 @@ public class RangeBar extends View {
             releasePin(mRightThumb);
 
         } else if (!mOnlyOnDrag) {
-            float leftThumbXDistance = getLeftThumbXDistance(x);
-            float rightThumbXDistance = getRightThumbXDistance(x);
-            //move if is rangeBar and left index is lower of right one
-            //if is not range bar leftThumbXDistance is always 0
-            if (leftThumbXDistance < rightThumbXDistance && mIsRangeBar) {
-                mLeftThumb.setX(x);
-                releasePin(mLeftThumb);
-            } else {
-                mRightThumb.setX(x);
-                releasePin(mRightThumb);
-            }
-
-            // Get the updated nearest tick marks for each thumb.
-            final int newLeftIndex = mIsRangeBar ? mBar.getNearestTickIndex(mLeftThumb) : 0;
-            final int newRightIndex = mBar.getNearestTickIndex(mRightThumb);
-            // If either of the indices have changed, update and call the listener.
-            if (newLeftIndex != mLeftIndex || newRightIndex != mRightIndex) {
-
-                mLeftIndex = newLeftIndex;
-                mRightIndex = newRightIndex;
-
-                if (mListener != null) {
-                    mListener.onRangeChangeListener(this, mLeftIndex, mRightIndex,
-                            getPinValue(mLeftIndex),
-                            getPinValue(mRightIndex));
-                }
-            }
+//            float leftThumbXDistance = getLeftThumbXDistance(x);
+//            float rightThumbXDistance = getRightThumbXDistance(x);
+//            //move if is rangeBar and left index is lower of right one
+//            //if is not range bar leftThumbXDistance is always 0
+//            if (leftThumbXDistance < rightThumbXDistance && mIsRangeBar) {
+//                mLeftThumb.setX(x);
+//                releasePin(mLeftThumb);
+//            } else {
+//                mRightThumb.setX(x);
+//                releasePin(mRightThumb);
+//            }
+//
+//            // Get the updated nearest tick marks for each thumb.
+//            final int newLeftIndex = mIsRangeBar ? mBar.getNearestTickIndex(mLeftThumb) : 0;
+//            final int newRightIndex = mBar.getNearestTickIndex(mRightThumb);
+//            // If either of the indices have changed, update and call the listener.
+//            if (newLeftIndex != mLeftIndex || newRightIndex != mRightIndex) {
+//
+//                mLeftIndex = newLeftIndex;
+//                mRightIndex = newRightIndex;
+//
+//                if (mListener != null) {
+//                    mListener.onRangeChangeListener(this, mLeftIndex, mRightIndex,
+//                            getPinValue(mLeftIndex),
+//                            getPinValue(mRightIndex));
+//                }
+//            }
         }
         mDragging = false;
 

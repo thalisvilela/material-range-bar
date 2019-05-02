@@ -21,6 +21,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -177,8 +178,12 @@ class PinView extends View {
         // image size
         int targetRadius = (int) Math.max(MINIMUM_TARGET_RADIUS_DP, mPinRadiusPx);
 
-        mTargetRadiusPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, targetRadius,
-                mRes.getDisplayMetrics());
+//        mTargetRadiusPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15,
+//                mRes.getDisplayMetrics());
+
+        mTargetRadiusPx = circleRadius*2;
+
+
         mY = y;
     }
 
