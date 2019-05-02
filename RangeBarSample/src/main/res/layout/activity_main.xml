@@ -48,8 +48,12 @@
         app:mrb_pinRadius="14dp"
         app:mrb_rangeBar_rounded="true"
         app:mrb_connectingLineColors="@array/connecting_colors"
+        app:mrb_tickDefaultColor="@color/indigo500"
+        app:mrb_tickColors="@array/tick_colors"
         app:mrb_rangeBar="true"
-        app:mrb_pinColor="#6c3f6a"/>
+        app:mrb_pinColor="#6c3f6a"
+        app:mrb_leftSelectorColor="#FF5722"
+        app:mrb_rightSelectorColor="#E91E63"/>
 
     <include
         layout="@layout/divider"

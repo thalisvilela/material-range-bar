@@ -5,7 +5,8 @@
         <attr name="mrb_tickEnd" format="float"/>
         <attr name="mrb_tickInterval" format="float"/>
         <attr name="mrb_tickHeight" format="dimension"/>
-        <attr name="mrb_tickColor" format="color"/>
+        <attr name="mrb_tickDefaultColor" format="color"/>
+        <attr name="mrb_tickColors" format="reference"/>
         <attr name="mrb_tickLabelColor" format="color"/>
         <attr name="mrb_tickLabelSelectedColor" format="color"/>
         <attr name="mrb_tickBottomLabels" format="reference"/>
@@ -24,6 +25,8 @@
         <attr name="mrb_pinMaxFont" format="dimension"/>
         <attr name="mrb_rangeBarPaddingBottom" format="dimension"/>
         <attr name="mrb_selectorColor" format="reference|color"/>
+        <attr name="mrb_leftSelectorColor" format="reference|color"/>
+        <attr name="mrb_rightSelectorColor" format="reference|color"/>
         <attr name="mrb_rangeBar" format="boolean"/>
         <attr name="mrb_temporaryPins" format="boolean"/>
         <attr name="mrb_rangeBar_rounded" format="boolean"/>

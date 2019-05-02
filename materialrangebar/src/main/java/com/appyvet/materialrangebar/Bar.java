@@ -21,6 +21,9 @@ import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.TypedValue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class represents the underlying gray bar in the RangeBar (without the
  * thumbs).
@@ -61,21 +64,23 @@ public class Bar {
 
     private float mTickLabelSize;
 
-    // Constructor /////////////////////////////////////////////////////////////
+    private int mTickDefaultColor;
 
+    private List<Integer> mTickColors = new ArrayList<>();
+
+    // Constructor /////////////////////////////////////////////////////////////
 
     /**
      * Bar constructor
      *
-     * @param ctx        the context
-     * @param x          the start x co-ordinate
-     * @param y          the y co-ordinate
-     * @param length     the length of the bar in px
-     * @param tickCount  the number of ticks on the bar
-     * @param tickHeight the height of each tick
-     * @param tickColor  the color of each tick
-     * @param barWeight  the weight of the bar
-     * @param barColor   the color of the bar
+     * @param ctx          the context
+     * @param x            the start x co-ordinate
+     * @param y            the y co-ordinate
+     * @param length       the length of the bar in px
+     * @param tickCount    the number of ticks on the bar
+     * @param tickHeight   the height of each tick
+     * @param barWeight    the weight of the bar
+     * @param barColor     the color of the bar
      * @param isBarRounded if the bar has rounded edges or not
      */
     public Bar(Context ctx,
@@ -84,7 +89,6 @@ public class Bar {
                float length,
                int tickCount,
                float tickHeight,
-               int tickColor,
                float barWeight,
                int barColor,
                boolean isBarRounded) {
@@ -106,27 +110,54 @@ public class Bar {
             mBarPaint.setStrokeCap(Paint.Cap.ROUND);
         }
         mTickPaint = new Paint();
-        mTickPaint.setColor(tickColor);
         mTickPaint.setStrokeWidth(barWeight);
         mTickPaint.setAntiAlias(true);
     }
 
+    /**
+     * Bar constructor
+     *
+     * @param ctx          the context
+     * @param x            the start x co-ordinate
+     * @param y            the y co-ordinate
+     * @param length       the length of the bar in px
+     * @param tickCount    the number of ticks on the bar
+     * @param tickHeight   the height of each tick
+     * @param tickDefaultColor    the color of all ticks
+     * @param barWeight    the weight of the bar
+     * @param barColor     the color of the bar
+     * @param isBarRounded if the bar has rounded edges or not
+     */
+    public Bar(Context ctx,
+               float x,
+               float y,
+               float length,
+               int tickCount,
+               float tickHeight,
+               int tickDefaultColor,
+               float barWeight,
+               int barColor,
+               boolean isBarRounded) {
+        this(ctx, x, y, length, tickCount, tickHeight, barWeight, barColor, isBarRounded);
+
+        mTickDefaultColor = tickDefaultColor;
+        mTickPaint.setColor(tickDefaultColor);
+    }
 
     /**
      * Bar constructor
      *
-     * @param ctx        the context
-     * @param x          the start x co-ordinate
-     * @param y          the y co-ordinate
-     * @param length     the length of the bar in px
-     * @param tickCount  the number of ticks on the bar
-     * @param tickHeight the height of each tick
-     * @param tickColor  the color of each tick
-     * @param barWeight  the weight of the bar
-     * @param barColor   the color of the bar
-     * @param isBarRounded if the bar has rounded edges or not
-     * @param tickLabelColor the color of each tick's label
-     * @param tickTopLabels the top label of each tick
+     * @param ctx              the context
+     * @param x                the start x co-ordinate
+     * @param y                the y co-ordinate
+     * @param length           the length of the bar in px
+     * @param tickCount        the number of ticks on the bar
+     * @param tickHeight       the height of each tick
+     * @param barWeight        the weight of the bar
+     * @param barColor         the color of the bar
+     * @param isBarRounded     if the bar has rounded edges or not
+     * @param tickLabelColor   the color of each tick's label
+     * @param tickTopLabels    the top label of each tick
      * @param tickBottomLabels the top label of each tick
      */
     public Bar(Context ctx,
@@ -135,7 +166,6 @@ public class Bar {
                float length,
                int tickCount,
                float tickHeight,
-               int tickColor,
                float barWeight,
                int barColor,
                boolean isBarRounded,
@@ -145,7 +175,7 @@ public class Bar {
                CharSequence[] tickBottomLabels,
                String tickDefaultLabel,
                float tickLabelSize) {
-        this(ctx, x, y, length, tickCount, tickHeight, tickColor, barWeight, barColor, isBarRounded);
+        this(ctx, x, y, length, tickCount, tickHeight, barWeight, barColor, isBarRounded);
 
         if (tickTopLabels != null || tickBottomLabels != null) {
             // Creates the paint and sets the Paint values
@@ -161,6 +191,85 @@ public class Bar {
         }
     }
 
+    /**
+     * Bar constructor
+     *
+     * @param ctx              the context
+     * @param x                the start x co-ordinate
+     * @param y                the y co-ordinate
+     * @param length           the length of the bar in px
+     * @param tickCount        the number of ticks on the bar
+     * @param tickHeight       the height of each tick
+     * @param tickDefaultColor the default color of all ticks
+     * @param barWeight        the weight of the bar
+     * @param barColor         the color of the bar
+     * @param isBarRounded     if the bar has rounded edges or not
+     * @param tickLabelColor   the color of each tick's label
+     * @param tickTopLabels    the top label of each tick
+     * @param tickBottomLabels the top label of each tick
+     */
+    public Bar(Context ctx,
+               float x,
+               float y,
+               float length,
+               int tickCount,
+               float tickHeight,
+               int tickDefaultColor,
+               float barWeight,
+               int barColor,
+               boolean isBarRounded,
+               int tickLabelColor,
+               int tickLabelSelectedColor,
+               CharSequence[] tickTopLabels,
+               CharSequence[] tickBottomLabels,
+               String tickDefaultLabel,
+               float tickLabelSize) {
+        this(ctx, x, y, length, tickCount, tickHeight, barWeight, barColor, isBarRounded, tickLabelColor, tickLabelSelectedColor, tickTopLabels, tickBottomLabels, tickDefaultLabel, tickLabelSize);
+        mTickDefaultColor = tickDefaultColor;
+        mTickPaint.setColor(tickDefaultColor);
+    }
+
+    /**
+     * Bar constructor
+     *
+     * @param ctx              the context
+     * @param x                the start x co-ordinate
+     * @param y                the y co-ordinate
+     * @param length           the length of the bar in px
+     * @param tickCount        the number of ticks on the bar
+     * @param tickHeight       the height of each tick
+     * @param tickDefaultColor        defualt tick color
+     * @param tickColors       the colors of each tick
+     * @param barWeight        the weight of the bar
+     * @param barColor         the color of the bar
+     * @param isBarRounded     if the bar has rounded edges or not
+     * @param tickLabelColor   the color of each tick's label
+     * @param tickTopLabels    the top label of each tick
+     * @param tickBottomLabels the top label of each tick
+     */
+    public Bar(Context ctx,
+               float x,
+               float y,
+               float length,
+               int tickCount,
+               float tickHeight,
+               int tickDefaultColor,
+               List<Integer> tickColors,
+               float barWeight,
+               int barColor,
+               boolean isBarRounded,
+               int tickLabelColor,
+               int tickLabelSelectedColor,
+               CharSequence[] tickTopLabels,
+               CharSequence[] tickBottomLabels,
+               String tickDefaultLabel,
+               float tickLabelSize) {
+
+        this(ctx, x, y, length, tickCount, tickHeight, barWeight, barColor, isBarRounded, tickLabelColor, tickLabelSelectedColor, tickTopLabels, tickBottomLabels, tickDefaultLabel, tickLabelSize);
+
+        mTickDefaultColor = tickDefaultColor;
+        mTickColors = tickColors;
+    }
     // Package-Private Methods /////////////////////////////////////////////////
 
     /**
@@ -276,7 +385,7 @@ public class Bar {
         // Loop through and draw each tick (except final tick).
         for (int i = 0; i < mNumSegments; i++) {
             final float x = i * mTickDistance + mLeftX;
-            canvas.drawCircle(x, mY, mTickHeight, mTickPaint);
+            canvas.drawCircle(x, mY, mTickHeight, getTick(i));
 
             if (paintLabel) {
                 if (mTickTopLabels != null)
@@ -288,7 +397,7 @@ public class Bar {
         }
         // Draw final tick. We draw the final tick outside the loop to avoid any
         // rounding discrepancies.
-        canvas.drawCircle(mRightX, mY, mTickHeight, mTickPaint);
+        canvas.drawCircle(mRightX, mY, mTickHeight, getTick(mNumSegments));
 
         // Draw final tick's label outside the loop
         if (paintLabel) {
@@ -301,7 +410,7 @@ public class Bar {
     }
 
     private void drawTickLabel(Canvas canvas, final String label, float x, float pinRadius,
-        boolean first, boolean last, boolean isTop, PinView rightThumb, @Nullable PinView leftThumb) {
+                               boolean first, boolean last, boolean isTop, PinView rightThumb, @Nullable PinView leftThumb) {
 
         Rect labelBounds = new Rect();
         mLabelPaint.getTextBounds(label, 0, label.length(), labelBounds);
@@ -333,5 +442,16 @@ public class Bar {
         }
 
         canvas.drawText(label, xPos, yPos, mLabelPaint);
+    }
+
+    private Paint getTick(int index) {
+
+        if (mTickColors != null && index < mTickColors.size()) {
+            mTickPaint.setColor(mTickColors.get(index));
+        } else {
+            mTickPaint.setColor(mTickDefaultColor);
+        }
+
+        return mTickPaint;
     }
 }
