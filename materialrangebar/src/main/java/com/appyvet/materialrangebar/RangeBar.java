@@ -683,6 +683,11 @@ public class RangeBar extends View {
         }
     }
 
+    public void setIntervals(float start, float end){
+        mTickStart = start;
+        mTickEnd = end;
+    }
+
     /**
      * Sets the start tick in the RangeBar.
      *
