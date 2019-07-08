@@ -677,6 +677,7 @@ public class RangeBar extends View {
             createBar();
             createPins();
         } else {
+            mTickStart = tickStart;
             Log.e(TAG, "tickCount less than 2; invalid tickCount.");
             throw new IllegalArgumentException("tickCount less than 2; invalid tickCount.");
         }
@@ -757,6 +758,7 @@ public class RangeBar extends View {
             createBar();
             createPins();
         } else {
+            mTickEnd = tickEnd;
             Log.e(TAG, "tickCount less than 2; invalid tickCount.");
             throw new IllegalArgumentException("tickCount less than 2; invalid tickCount.");
         }
